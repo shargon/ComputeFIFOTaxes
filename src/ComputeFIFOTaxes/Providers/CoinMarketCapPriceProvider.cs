@@ -4,6 +4,9 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Web;
 
 namespace ComputeFIFOTaxes.Providers
 {
@@ -23,6 +26,11 @@ namespace ComputeFIFOTaxes.Providers
         /// Config
         /// </summary>
         private readonly Config.CoinMarketCapConfig _config;
+
+        /// <summary>
+        /// Counter for api
+        /// </summary>
+        private long _counter = 0;
 
         /// <summary>
         /// Fiat coin
@@ -74,7 +82,10 @@ namespace ComputeFIFOTaxes.Providers
 
             // Add to cache
 
-            data[date] = InternalGetFiatPrice(coin, date);
+            var ret = InternalGetFiatPrice(coin, date);
+            ret.Wait();
+
+            data[date] = ret.Result;
             SaveCache();
 
             return data[date];
@@ -86,9 +97,36 @@ namespace ComputeFIFOTaxes.Providers
         /// <param name="coin">Coin</param>
         /// <param name="date">Date</param>
         /// <returns>Price</returns>
-        private FiatPrice InternalGetFiatPrice(ECoin coin, DateTime date)
+        private async Task<FiatPrice> InternalGetFiatPrice(ECoin coin, DateTime date)
         {
+            if (coin == Coin)
+            {
+                return new FiatPrice() { Average = 1, Max = 1, Min = 1 };
+            }
+
             // https://coinmarketcap.com/api/documentation/v1/#operation/getV1CryptocurrencyOhlcvHistorical
+
+            //string pageContents;
+
+            //using (HttpClient client = new HttpClient())
+            //{
+            //    var url = new UriBuilder("https://pro-api.coinmarketcap.com/v1/cryptocurrency/ohlcv/historical");
+
+            //    var queryString = HttpUtility.ParseQueryString(string.Empty);
+            //    queryString["id"] = (++_counter).ToString();
+            //    queryString["time_start"] = "2019-01-01";
+            //    queryString["time_end"] = "2019-01-03";
+            //    queryString["symbol"] = GetSymbol(coin);
+            //    queryString["convert"] = GetSymbol(Coin);
+
+            //    client.DefaultRequestHeaders.Add("X-CMC_PRO_API_KEY", _config.ApiKey);
+            //    client.DefaultRequestHeaders.Add("Accept", "application/json");
+
+            //    var response = await client.GetAsync(url.ToString());
+            //    pageContents = await response.Content.ReadAsStringAsync();
+            //}
+
+            //var json = JsonConvert.DeserializeObject(pageContents);
 
             var min = 0;
             var max = 0;

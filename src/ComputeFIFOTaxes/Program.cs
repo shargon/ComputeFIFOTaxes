@@ -11,6 +11,8 @@ namespace ComputeFIFOTaxes
 {
     class Program
     {
+        private static IFiatPriceProvider _priceProvider;
+
         static void Main(string[] args)
         {
             if (!File.Exists("config.json"))
@@ -21,8 +23,8 @@ namespace ComputeFIFOTaxes
             var cfg = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
             var provider = new GoogleSheetsProvider(cfg);
             var trades = new List<Trade>();
-            var fiatPriceProvider = new CoinMarketCapPriceProvider(cfg.CoinMarketCap);
             var parsers = new IParser[] { new KrakenParser(), new BinanceParser() };
+            _priceProvider = new CoinMarketCapPriceProvider(cfg.CoinMarketCap);
 
             // Parser trades
 
@@ -45,15 +47,19 @@ namespace ComputeFIFOTaxes
 
             foreach (var trade in trades)
             {
-                trade.From.FiatPrice = trade.From.Coin == fiatPriceProvider.Coin ? trade.From.Value :
-                    ChoosePrice(trade, fiatPriceProvider.GetFiatPrice(trade.From.Coin, trade.Date)) * trade.From.Value;
-                trade.To.FiatPrice = trade.To.Coin == fiatPriceProvider.Coin ? trade.To.Value :
-                    ChoosePrice(trade, fiatPriceProvider.GetFiatPrice(trade.To.Coin, trade.Date)) * trade.To.Value;
-
-                foreach (var fee in trade.Fees)
+                if (!trade.FiatCostWithoutFees.HasValue)
                 {
-                    fee.FiatPrice = fee.Coin == fiatPriceProvider.Coin ? fee.Value :
-                        ChoosePrice(trade, fiatPriceProvider.GetFiatPrice(fee.Coin, trade.Date)) * fee.Value;
+                    trade.FiatCostWithoutFees = ChoosePriceForTrade(trade, trade.Date);
+                }
+
+                if (!trade.FiatFees.HasValue)
+                {
+                    trade.FiatFees = 0;
+
+                    foreach (var fee in trade.Fees)
+                    {
+                        trade.FiatFees += ChoosePriceForFee(fee, trade.Date);
+                    }
                 }
             }
 
@@ -66,11 +72,33 @@ namespace ComputeFIFOTaxes
         /// Choose the best price for this trade
         /// </summary>
         /// <param name="trade">Trade</param>
-        /// <param name="fiatPrice">Fiat price</param>
+        /// <param name="date">date</param>
         /// <returns>Decimal value</returns>
-        private static Decimal ChoosePrice(Trade trade, FiatPrice fiatPrice)
+        private static Decimal ChoosePriceForFee(Quantity trade, DateTime date)
         {
-            return fiatPrice.Average;
+            return _priceProvider.GetFiatPrice(trade.Coin, date).Max * trade.Value;
+        }
+
+        /// <summary>
+        /// Choose the best price for this trade
+        /// </summary>
+        /// <param name="trade">Trade</param>
+        /// <param name="date">date</param>
+        /// <returns>Decimal value</returns>
+        private static Decimal ChoosePriceForTrade(Trade trade, DateTime date)
+        {
+            if (trade.From.Coin == _priceProvider.Coin)
+            {
+                return trade.From.Value;
+            }
+            else if (trade.To.Coin == _priceProvider.Coin)
+            {
+                return trade.To.Value;
+            }
+
+            var price = _priceProvider.GetFiatPrice(trade.From.Coin, date);
+
+            return price.Average * trade.From.Value;
         }
     }
 }

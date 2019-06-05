@@ -18,11 +18,6 @@ namespace ComputeFIFOTaxes.Types
         public Decimal Value { get; set; }
 
         /// <summary>
-        /// Fiat price
-        /// </summary>
-        public Decimal? FiatPrice { get; set; }
-
-        /// <summary>
         /// String representation
         /// </summary>
         /// <returns>Json string</returns>

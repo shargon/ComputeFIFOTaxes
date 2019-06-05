@@ -6,6 +6,11 @@ namespace ComputeFIFOTaxes.Interfaces
     public interface IFiatPriceProvider
     {
         /// <summary>
+        /// Coint
+        /// </summary>
+        ECoin Coin { get; }
+
+        /// <summary>
         /// Get fiat price for one coin in specific date
         /// </summary>
         /// <param name="coin">Coin</param>

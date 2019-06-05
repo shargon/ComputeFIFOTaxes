@@ -8,11 +8,13 @@ namespace ComputeFIFOTaxes.Types
         /// <summary>
         /// Exchange
         /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Exchange { get; set; }
 
         /// <summary>
         /// Id
         /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Id { get; set; }
 
         /// <summary>
@@ -34,6 +36,18 @@ namespace ComputeFIFOTaxes.Types
         /// Fee
         /// </summary>
         public Quantity[] Fees { get; set; }
+
+        /// <summary>
+        /// Total cost (without fees)
+        /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public Decimal? FiatCostWithoutFees { get; set; }
+
+        /// <summary>
+        /// Total fees
+        /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public Decimal? FiatFees { get; set; }
 
         /// <summary>
         /// String representation
