@@ -11,6 +11,6 @@ namespace ComputeFIFOTaxes.Interfaces
         /// <param name="coin">Coin</param>
         /// <param name="date">Date</param>
         /// <returns>Price</returns>
-        Decimal GetFiatPrice(ECoin coin, DateTime date);
+        FiatPrice GetFiatPrice(ECoin coin, DateTime date);
     }
 }
