@@ -12,6 +12,7 @@
         EUR,
         USDT,
         NEO,
+        GAS,
         OMG,
         USD
     }

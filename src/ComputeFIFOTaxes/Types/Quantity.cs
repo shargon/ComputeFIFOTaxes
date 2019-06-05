@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System;
 
 namespace ComputeFIFOTaxes.Types
 {
@@ -7,6 +9,7 @@ namespace ComputeFIFOTaxes.Types
         /// <summary>
         /// Coin
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public ECoin Coin { get; set; }
 
         /// <summary>
@@ -18,5 +21,11 @@ namespace ComputeFIFOTaxes.Types
         /// Fiat price
         /// </summary>
         public Decimal? FiatPrice { get; set; }
+
+        /// <summary>
+        /// String representation
+        /// </summary>
+        /// <returns>Json string</returns>
+        public override string ToString() => JsonConvert.SerializeObject(this);
     }
 }

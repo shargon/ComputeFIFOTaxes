@@ -2,7 +2,9 @@
 using ComputeFIFOTaxes.Parsers;
 using ComputeFIFOTaxes.Providers;
 using ComputeFIFOTaxes.Types;
+using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.IO;
 
 namespace ComputeFIFOTaxes
 {
@@ -10,8 +12,13 @@ namespace ComputeFIFOTaxes
     {
         static void Main(string[] args)
         {
-            var sheet = args[0];
-            var provider = new GoogleSheetsProvider(sheet);
+            if (!File.Exists("config.json"))
+            {
+                File.WriteAllText("config.json", JsonConvert.SerializeObject(new Config(), Formatting.Indented));
+            }
+
+            var cfg = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
+            var provider = new GoogleSheetsProvider(cfg);
             var trades = new List<Trade>();
             var fiatPriceProvider = new CoinMarketCapPriceProvider(ECoin.EUR);
             var parsers = new IParser[] { new KrakenParser(), new BinanceParser() };
@@ -25,6 +32,7 @@ namespace ComputeFIFOTaxes
                     if (!parser.IsThis(data)) continue;
 
                     trades.AddRange(parser.GetTrades(data));
+                    break;
                 }
             }
 
@@ -38,7 +46,11 @@ namespace ComputeFIFOTaxes
             {
                 trade.From.FiatPrice = fiatPriceProvider.GetFiatPrice(trade.From.Coin, trade.Date) * trade.From.Value;
                 trade.To.FiatPrice = fiatPriceProvider.GetFiatPrice(trade.To.Coin, trade.Date) * trade.To.Value;
-                trade.Fee.FiatPrice = fiatPriceProvider.GetFiatPrice(trade.Fee.Coin, trade.Date) * trade.Fee.Value;
+
+                foreach (var fee in trade.Fees)
+                {
+                    fee.FiatPrice = fiatPriceProvider.GetFiatPrice(fee.Coin, trade.Date) * fee.Value;
+                }
             }
 
             // Compute fifo

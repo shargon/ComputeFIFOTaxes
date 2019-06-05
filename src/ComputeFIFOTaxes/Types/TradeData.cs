@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace ComputeFIFOTaxes.Types
 {
@@ -13,5 +14,11 @@ namespace ComputeFIFOTaxes.Types
         /// Data
         /// </summary>
         public List<object[]> Data { get; set; }
+
+        /// <summary>
+        /// String representation
+        /// </summary>
+        /// <returns>Json string</returns>
+        public override string ToString() => JsonConvert.SerializeObject(this);
     }
 }

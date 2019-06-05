@@ -17,7 +17,7 @@ namespace ComputeFIFOTaxes.Providers
         /// <param name="fiatCoin">Fiat coin</param>
         public CoinMarketCapPriceProvider(ECoin fiatCoin)
         {
-            if (fiatCoin != ECoin.EUR || fiatCoin != ECoin.USD)
+            if (fiatCoin != ECoin.EUR && fiatCoin != ECoin.USD)
             {
                 throw new ArgumentException(nameof(fiatCoin));
             }
