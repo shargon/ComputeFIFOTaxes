@@ -9,6 +9,12 @@ namespace ComputeFIFOTaxes.Parsers
 {
     public class KrakenParser : IParser
     {
+        class TradeId
+        {
+            public Trade Trade;
+            public string Id;
+        }
+
         public IEnumerable<Trade> GetTrades(TradeData data)
         {
             var fetch = data.Data.GetEnumerator();
@@ -16,16 +22,16 @@ namespace ComputeFIFOTaxes.Parsers
 
             var header = fetch.Current.Select(u => u.ToString()).ToArray();
 
+            var fee = Array.IndexOf(header, "fee");
             var date = Array.IndexOf(header, "time");
             var type = Array.IndexOf(header, "type");
             var refid = Array.IndexOf(header, "refid");
             var asset = Array.IndexOf(header, "asset");
             var amount = Array.IndexOf(header, "amount");
-            var fee = Array.IndexOf(header, "fee");
 
             if (date < 0 || type < 0 || refid < 0 || asset < 0 || amount < 0 || fee < 0) yield break;
 
-            var list = new List<Trade>();
+            var list = new List<TradeId>();
 
             while (fetch.MoveNext())
             {
@@ -33,31 +39,33 @@ namespace ComputeFIFOTaxes.Parsers
 
                 if (row[type].ToString() != "trade") continue;
 
-                list.Add(new Trade()
+                var fromValue = Decimal.Parse(row[amount].ToString(), CultureInfo.InvariantCulture);
+                var trade = (fromValue < 0 ? (Trade)new SellTrade() : new BuyTrade());
+
+                trade.Exchange = "Kraken";
+                trade.From = new Quantity()
                 {
-                    Exchange = "Kraken",
-                    Id = row[refid].ToString(),
-                    From = new Quantity()
+                    Coin = ParseCoin(row[asset].ToString()),
+                    Value = fromValue
+                };
+                trade.Date = DateTime.ParseExact(row[date].ToString(), "yyyy-MM-dd H:mm", CultureInfo.InvariantCulture);
+                trade.Fees = new Quantity[]
+                {
+                    new Quantity()
                     {
                         Coin = ParseCoin(row[asset].ToString()),
-                        Value = Decimal.Parse(row[amount].ToString(), CultureInfo.InvariantCulture)
-                    },
-                    Fees = new Quantity[]
-                    {
-                        new Quantity()
-                        {
-                            Coin = ParseCoin(row[asset].ToString()),
-                            Value = Decimal.Parse(row[fee].ToString(), CultureInfo.InvariantCulture)
-                        }
-                    },
-                    Date = DateTime.ParseExact(row[date].ToString(), "yyyy-MM-dd H:mm", CultureInfo.InvariantCulture)
-                });
+                        Value = Decimal.Parse(row[fee].ToString(), CultureInfo.InvariantCulture)
+                    }
+                };
+
+                list.Add(new TradeId() { Trade = trade, Id = row[refid].ToString() });
             }
 
             for (var x = 0; x < list.Count - 1; x++)
             {
-                var trade = list[x];
-                var nextTrade = list.Where(u => u.Id == trade.Id && u != trade).ToArray();
+                var tradei = list[x];
+                var trade = tradei.Trade;
+                var nextTrade = list.Where(u => u.Id == tradei.Id && u.Trade != trade).ToArray();
 
                 if (nextTrade.Length != 1 || !list.Remove(nextTrade[0]))
                 {
@@ -66,13 +74,13 @@ namespace ComputeFIFOTaxes.Parsers
 
                 if (trade.From.Value < 0)
                 {
-                    trade.To = nextTrade[0].From;
+                    trade.To = nextTrade[0].Trade.From;
 
                     if (trade.Fees[0].Value == 0)
                     {
-                        if (nextTrade[0].Fees[0].Value > 0)
+                        if (nextTrade[0].Trade.Fees[0].Value > 0)
                         {
-                            trade.Fees = nextTrade[0].Fees;
+                            trade.Fees = nextTrade[0].Trade.Fees;
                         }
                         else
                         {
@@ -81,16 +89,16 @@ namespace ComputeFIFOTaxes.Parsers
                     }
                     else
                     {
-                        if (trade.Fees[0].Value > 0 && nextTrade[0].Fees[0].Value > 0)
+                        if (trade.Fees[0].Value > 0 && nextTrade[0].Trade.Fees[0].Value > 0)
                         {
-                            trade.Fees = new Quantity[] { trade.Fees[0], nextTrade[0].Fees[0] };
+                            trade.Fees = new Quantity[] { trade.Fees[0], nextTrade[0].Trade.Fees[0] };
                         }
                     }
                 }
                 else
                 {
                     trade.To = trade.From;
-                    trade.From = nextTrade[0].From;
+                    trade.From = nextTrade[0].Trade.From;
                 }
             }
 
@@ -98,9 +106,9 @@ namespace ComputeFIFOTaxes.Parsers
 
             foreach (var entry in list)
             {
-                if (entry.To == null) throw new ArgumentException("From not found");
+                if (entry.Trade.To == null) throw new ArgumentException("From not found");
 
-                yield return entry;
+                yield return entry.Trade;
             }
         }
 

@@ -20,9 +20,9 @@ namespace ComputeFIFOTaxes
                 File.WriteAllText("config.json", JsonConvert.SerializeObject(new Config(), Formatting.Indented));
             }
 
+            var trades = new List<Trade>();
             var cfg = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
             var provider = new GoogleSheetsProvider(cfg);
-            var trades = new List<Trade>();
             var parsers = new IParser[] { new KrakenParser(), new BinanceParser() };
             _priceProvider = new CoinMarketCapPriceProvider(cfg.CoinMarketCap);
 
@@ -98,7 +98,7 @@ namespace ComputeFIFOTaxes
 
             var price = _priceProvider.GetFiatPrice(trade.From.Coin, date);
 
-            return price.Average * trade.From.Value;
+            return (trade is SellTrade ? price.Min : price.Max) * trade.From.Value;
         }
     }
 }

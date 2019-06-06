@@ -38,7 +38,7 @@ namespace ComputeFIFOTaxes.Parsers
                 {
                     case "BUY":
                         {
-                            yield return new Trade()
+                            yield return new BuyTrade()
                             {
                                 Exchange = "Binance",
                                 From = new Quantity()
@@ -65,7 +65,7 @@ namespace ComputeFIFOTaxes.Parsers
                         }
                     case "SELL":
                         {
-                            yield return new Trade()
+                            yield return new SellTrade()
                             {
                                 Exchange = "Binance",
                                 From = new Quantity()

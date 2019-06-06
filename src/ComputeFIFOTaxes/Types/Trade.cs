@@ -3,24 +3,13 @@ using System;
 
 namespace ComputeFIFOTaxes.Types
 {
-    public class Trade
+    public abstract class Trade
     {
         /// <summary>
         /// Exchange
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Exchange { get; set; }
-
-        /// <summary>
-        /// Id
-        /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Id { get; set; }
-
-        /// <summary>
-        /// Date
-        /// </summary>
-        public DateTime Date { get; set; }
 
         /// <summary>
         /// From
@@ -31,6 +20,11 @@ namespace ComputeFIFOTaxes.Types
         /// To
         /// </summary>
         public Quantity To { get; set; }
+
+        /// <summary>
+        /// Date
+        /// </summary>
+        public DateTime Date { get; set; }
 
         /// <summary>
         /// Fee
