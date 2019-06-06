@@ -1,6 +1,4 @@
 ﻿namespace ComputeFIFOTaxes.Types
 {
-    public class SellTrade : Trade
-    {
-    }
+    public class SellTrade : Trade { }
 }

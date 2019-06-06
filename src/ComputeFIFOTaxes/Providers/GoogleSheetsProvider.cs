@@ -4,6 +4,7 @@ using Google.Apis.Auth.OAuth2;
 using Google.Apis.Services;
 using Google.Apis.Sheets.v4;
 using Google.Apis.Util.Store;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -88,5 +89,11 @@ namespace ComputeFIFOTaxes.Providers
                 };
             }
         }
+
+        /// <summary>
+        /// String representation
+        /// </summary>
+        /// <returns>Json string</returns>
+        public override string ToString() => JsonConvert.SerializeObject(this);
     }
 }

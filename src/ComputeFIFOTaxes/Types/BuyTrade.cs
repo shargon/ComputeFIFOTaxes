@@ -1,6 +1,4 @@
 ﻿namespace ComputeFIFOTaxes.Types
 {
-    public class BuyTrade : Trade
-    {
-    }
+    public class BuyTrade : Trade { }
 }

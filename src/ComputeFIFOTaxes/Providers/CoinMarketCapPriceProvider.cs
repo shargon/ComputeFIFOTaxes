@@ -4,9 +4,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace ComputeFIFOTaxes.Providers
 {
@@ -80,15 +78,22 @@ namespace ComputeFIFOTaxes.Providers
                 data = _cache[coin] = new Dictionary<DateTime, FiatPrice>();
             }
 
+            // Check same coin
+
+            if (coin == Coin)
+            {
+                return new FiatPrice() { Average = 1, Max = 1, Min = 1 };
+            }
+
             // Add to cache
 
             var ret = InternalGetFiatPrice(coin, date);
             ret.Wait();
 
             data[date] = ret.Result;
-            SaveCache();
+            File.WriteAllText(CacheFile, JsonConvert.SerializeObject(_cache, Formatting.Indented));
 
-            return data[date];
+            return ret.Result;
         }
 
         /// <summary>
@@ -99,11 +104,6 @@ namespace ComputeFIFOTaxes.Providers
         /// <returns>Price</returns>
         private async Task<FiatPrice> InternalGetFiatPrice(ECoin coin, DateTime date)
         {
-            if (coin == Coin)
-            {
-                return new FiatPrice() { Average = 1, Max = 1, Min = 1 };
-            }
-
             // https://coinmarketcap.com/api/documentation/v1/#operation/getV1CryptocurrencyOhlcvHistorical
 
             //string pageContents;
@@ -156,11 +156,9 @@ namespace ComputeFIFOTaxes.Providers
         }
 
         /// <summary>
-        /// Save cache
+        /// String representation
         /// </summary>
-        private void SaveCache()
-        {
-            File.WriteAllText(CacheFile, JsonConvert.SerializeObject(_cache, Formatting.Indented));
-        }
+        /// <returns>Json string</returns>
+        public override string ToString() => JsonConvert.SerializeObject(this);
     }
 }
