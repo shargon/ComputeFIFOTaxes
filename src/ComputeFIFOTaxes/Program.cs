@@ -13,7 +13,7 @@ namespace ComputeFIFOTaxes
     {
         private static IFiatPriceProvider _priceProvider;
 
-        static void Main(string[] args)
+        static void Main()
         {
             if (!File.Exists("config.json"))
             {
@@ -74,7 +74,7 @@ namespace ComputeFIFOTaxes
         /// <param name="trade">Trade</param>
         /// <param name="date">date</param>
         /// <returns>Decimal value</returns>
-        private static Decimal ChoosePriceForFee(Quantity trade, DateTime date)
+        private static decimal ChoosePriceForFee(Quantity trade, DateTime date)
         {
             return _priceProvider.GetFiatPrice(trade.Coin, date).Max * trade.Value;
         }
@@ -85,7 +85,7 @@ namespace ComputeFIFOTaxes
         /// <param name="trade">Trade</param>
         /// <param name="date">date</param>
         /// <returns>Decimal value</returns>
-        private static Decimal ChoosePriceForTrade(Trade trade, DateTime date)
+        private static decimal ChoosePriceForTrade(Trade trade, DateTime date)
         {
             if (trade.From.Coin == _priceProvider.Coin)
             {

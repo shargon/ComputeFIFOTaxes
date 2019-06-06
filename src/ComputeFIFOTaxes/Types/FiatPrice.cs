@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
 
 namespace ComputeFIFOTaxes.Types
 {
@@ -8,17 +7,17 @@ namespace ComputeFIFOTaxes.Types
         /// <summary>
         /// Minimum
         /// </summary>
-        public Decimal Min { get; set; } = 0;
+        public decimal Min { get; set; } = 0;
 
         /// <summary>
         /// Maximum
         /// </summary>
-        public Decimal Max { get; set; } = 0;
+        public decimal Max { get; set; } = 0;
 
         /// <summary>
         /// Average
         /// </summary>
-        public Decimal Average { get; set; } = 0;
+        public decimal Average { get; set; } = 0;
 
         /// <summary>
         /// String representation

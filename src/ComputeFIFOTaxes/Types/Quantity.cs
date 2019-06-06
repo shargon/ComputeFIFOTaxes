@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using System;
 
 namespace ComputeFIFOTaxes.Types
 {
@@ -15,7 +14,7 @@ namespace ComputeFIFOTaxes.Types
         /// <summary>
         /// Value
         /// </summary>
-        public Decimal Value { get; set; }
+        public decimal Value { get; set; }
 
         /// <summary>
         /// String representation

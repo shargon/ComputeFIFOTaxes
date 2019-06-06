@@ -45,19 +45,19 @@ namespace ComputeFIFOTaxes.Parsers
                                 From = new Quantity()
                                 {
                                     Coin = to,
-                                    Value = Decimal.Parse(row[total].ToString(), CultureInfo.InvariantCulture)
+                                    Value = decimal.Parse(row[total].ToString(), CultureInfo.InvariantCulture)
                                 },
                                 To = new Quantity()
                                 {
                                     Coin = from,
-                                    Value = Decimal.Parse(row[amount].ToString(), CultureInfo.InvariantCulture)
+                                    Value = decimal.Parse(row[amount].ToString(), CultureInfo.InvariantCulture)
                                 },
                                 Fees = new Quantity[]
                                 {
                                     new Quantity()
                                     {
                                         Coin = ParseCoin(row[feeCoin].ToString()),
-                                        Value = Decimal.Parse(row[fee].ToString(), CultureInfo.InvariantCulture)
+                                        Value = decimal.Parse(row[fee].ToString(), CultureInfo.InvariantCulture)
                                     }
                                 },
                                 Date = DateTime.ParseExact(row[date].ToString(), "yyyy-MM-dd H:mm:ss", CultureInfo.InvariantCulture)
@@ -72,19 +72,19 @@ namespace ComputeFIFOTaxes.Parsers
                                 From = new Quantity()
                                 {
                                     Coin = from,
-                                    Value = Decimal.Parse(row[amount].ToString(), CultureInfo.InvariantCulture)
+                                    Value = decimal.Parse(row[amount].ToString(), CultureInfo.InvariantCulture)
                                 },
                                 To = new Quantity()
                                 {
                                     Coin = to,
-                                    Value = Decimal.Parse(row[total].ToString(), CultureInfo.InvariantCulture)
+                                    Value = decimal.Parse(row[total].ToString(), CultureInfo.InvariantCulture)
                                 },
                                 Fees = new Quantity[]
                                 {
                                     new Quantity()
                                     {
                                         Coin = ParseCoin(row[feeCoin].ToString()),
-                                        Value = Decimal.Parse(row[fee].ToString(), CultureInfo.InvariantCulture)
+                                        Value = decimal.Parse(row[fee].ToString(), CultureInfo.InvariantCulture)
                                     }
                                 },
                                 Date = DateTime.ParseExact(row[date].ToString(), "yyyy-MM-dd H:mm:ss", CultureInfo.InvariantCulture)
