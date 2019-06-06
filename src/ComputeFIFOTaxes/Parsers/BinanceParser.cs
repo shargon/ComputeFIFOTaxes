@@ -41,7 +41,7 @@ namespace ComputeFIFOTaxes.Parsers
                         {
                             yield return new BuyTrade()
                             {
-                                Exchange = "Binance",
+                                Exchange = this,
                                 From = new Quantity()
                                 {
                                     Coin = to,
@@ -68,7 +68,7 @@ namespace ComputeFIFOTaxes.Parsers
                         {
                             yield return new SellTrade()
                             {
-                                Exchange = "Binance",
+                                Exchange = this,
                                 From = new Quantity()
                                 {
                                     Coin = from,

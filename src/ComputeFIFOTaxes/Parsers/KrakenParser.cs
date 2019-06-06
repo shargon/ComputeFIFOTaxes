@@ -43,7 +43,7 @@ namespace ComputeFIFOTaxes.Parsers
                 var fromValue = Decimal.Parse(row[amount].ToString(), CultureInfo.InvariantCulture);
                 var trade = (fromValue < 0 ? (Trade)new SellTrade() : new BuyTrade());
 
-                trade.Exchange = "Kraken";
+                trade.Exchange = this;
                 trade.From = new Quantity()
                 {
                     Coin = ParseCoin(row[asset].ToString()),

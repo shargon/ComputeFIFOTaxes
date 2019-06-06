@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using ComputeFIFOTaxes.Interfaces;
+using Newtonsoft.Json;
 using System;
 
 namespace ComputeFIFOTaxes.Types
@@ -8,8 +9,8 @@ namespace ComputeFIFOTaxes.Types
         /// <summary>
         /// Exchange
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Exchange { get; set; }
+        [JsonIgnore]
+        internal IParser Exchange { get; set; }
 
         /// <summary>
         /// From

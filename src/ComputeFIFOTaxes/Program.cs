@@ -11,7 +11,7 @@ namespace ComputeFIFOTaxes
 {
     class Program
     {
-        private static IFiatPriceProvider _priceProvider;
+        private static FiatProviderBase _priceProvider;
 
         static void Main()
         {
