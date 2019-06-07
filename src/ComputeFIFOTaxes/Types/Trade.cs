@@ -10,7 +10,7 @@ namespace ComputeFIFOTaxes.Types
         /// Exchange
         /// </summary>
         [JsonIgnore]
-        internal IParser Exchange { get; set; }
+        internal IExchange Exchange { get; set; }
 
         /// <summary>
         /// From

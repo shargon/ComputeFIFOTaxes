@@ -10,14 +10,13 @@ namespace ComputeFIFOTaxes
             public string Id { get; set; }
         }
 
-        public class CoinMarketCapConfig
+        public class FiatProviderConfig
         {
-            public string ApiKey { get; set; }
             public ECoin FiatCoin { get; set; }
         }
 
         public SheetConfig SpreadSheet { get; set; }
-        public CoinMarketCapConfig CoinMarketCap { get; set; }
+        public FiatProviderConfig FiatProvider { get; set; }
 
         /// <summary>
         /// String representation

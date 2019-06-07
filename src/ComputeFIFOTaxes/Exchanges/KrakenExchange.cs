@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-namespace ComputeFIFOTaxes.Parsers
+namespace ComputeFIFOTaxes.Exchanges
 {
-    public class KrakenParser : IParser
+    public class KrakenExchange : IExchange
     {
         class TradeId
         {

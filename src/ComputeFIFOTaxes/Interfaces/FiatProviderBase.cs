@@ -7,7 +7,6 @@ using System.Diagnostics;
 #endif
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ComputeFIFOTaxes.Interfaces
 {
@@ -47,12 +46,16 @@ namespace ComputeFIFOTaxes.Interfaces
             {
                 // Load cache
 
-                var data = JsonConvert.DeserializeObject<Dictionary<ECoin, Dictionary<DateTime, Dictionary<ECoin, FiatPrice>>>>(File.ReadAllText(CacheFile));
-                if (data != null) _cache = data;
+                try
+                {
+                    var data = JsonConvert.DeserializeObject<Dictionary<ECoin, Dictionary<DateTime, Dictionary<ECoin, FiatPrice>>>>(File.ReadAllText(CacheFile));
+                    if (data != null) _cache = data;
 
 #if DEBUG
-                Debugger.Log(0, "CACHE", "Loaded " + data.Values.Sum(u => u.Values.Sum(x => x.Count)) + " entries");
+                    Debugger.Log(0, "CACHE", "Loaded " + data.Values.Sum(u => u.Values.Sum(x => x.Count)) + " entries");
 #endif
+                }
+                catch { }
             }
 
             if (_cache == null)
@@ -64,24 +67,26 @@ namespace ComputeFIFOTaxes.Interfaces
         /// <summary>
         /// Get fiat price for one coin in specific date
         /// </summary>
+        /// <param name="parser">Parser</param>
         /// <param name="coin">Coin</param>
         /// <param name="date">Date</param>
         /// <returns>Price</returns>
-        protected abstract Task<FiatPrice> InternalGetFiatPrice(ECoin coin, DateTime date);
+        protected abstract FiatPrice InternalGetFiatPrice(IExchange parser, ECoin coin, DateTime date);
 
         /// <summary>
         /// Get fiat price for one coin in specific date
         /// </summary>
+        /// <param name="parser">Parser</param>
         /// <param name="coin">Coin</param>
         /// <param name="date">Date</param>
         /// <returns>Price</returns>
-        public FiatPrice GetFiatPrice(ECoin coin, DateTime date)
+        public FiatPrice GetFiatPrice(IExchange parser, ECoin coin, DateTime date)
         {
             // Check same coin
 
             if (coin == Coin)
             {
-                return new FiatPrice() { Average = 1, Max = 1, Min = 1 };
+                return new FiatPrice(1, 1);
             }
 
             // Search inside the cache
@@ -101,15 +106,18 @@ namespace ComputeFIFOTaxes.Interfaces
                 data[date] = value = new Dictionary<ECoin, FiatPrice>();
             }
 
+            if (value.TryGetValue(Coin, out var result) && result.Average != 0)
+            {
+                return result;
+            }
+
             // Add to cache
 
-            var ret = InternalGetFiatPrice(coin, date);
-            ret.Wait();
+            var ret = value[Coin] = InternalGetFiatPrice(parser, coin, date);
 
-            value[Coin] = ret.Result;
             File.WriteAllText(CacheFile, JsonConvert.SerializeObject(_cache, Formatting.Indented));
 
-            return ret.Result;
+            return ret;
         }
 
         /// <summary>

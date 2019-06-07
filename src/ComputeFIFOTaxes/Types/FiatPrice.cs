@@ -20,6 +20,18 @@ namespace ComputeFIFOTaxes.Types
         public decimal Average { get; set; } = 0;
 
         /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="min">Minimum</param>
+        /// <param name="max">Maximum</param>
+        public FiatPrice(decimal min, decimal max)
+        {
+            Min = min;
+            Max = max;
+            Average = (min + max) / 2M;
+        }
+
+        /// <summary>
         /// String representation
         /// </summary>
         /// <returns>Json string</returns>
