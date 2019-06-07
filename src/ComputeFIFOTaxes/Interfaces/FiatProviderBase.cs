@@ -52,7 +52,7 @@ namespace ComputeFIFOTaxes.Interfaces
                     if (data != null) _cache = data;
 
 #if DEBUG
-                    Debugger.Log(0, "CACHE", "Loaded " + data.Values.Sum(u => u.Values.Sum(x => x.Count)) + " entries");
+                    Debugger.Log(0, "MarketCache", "Loaded " + data.Values.Sum(u => u.Values.Sum(x => x.Count)) + " entries");
 #endif
                 }
                 catch { }
