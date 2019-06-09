@@ -1,0 +1,10 @@
+﻿{
+    "spreadsheet":
+    {
+        "id": ""
+    },
+    "fiatProvider":
+    {
+        "fiatCoin": "EUR"
+    }
+}
