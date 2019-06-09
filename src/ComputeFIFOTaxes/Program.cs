@@ -4,7 +4,9 @@ using ComputeFIFOTaxes.Parsers;
 using ComputeFIFOTaxes.Providers;
 using ComputeFIFOTaxes.Types;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -15,8 +17,6 @@ namespace ComputeFIFOTaxes
 {
     class Program
     {
-        private static FiatProviderBase _priceProvider;
-
         static void Main()
         {
             if (!File.Exists("config.json"))
@@ -27,13 +27,13 @@ namespace ComputeFIFOTaxes
             var trades = new List<Trade>();
             var cfg = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
             var provider = new GoogleSheetsProvider(cfg);
-            var parsers = new ITradeParser[] 
+            var parsers = new ITradeParser[]
             {
                 new KrakenLedgerParser(), // Kraken Ledfer before Trades ALWAYS
                 new KrakenTradesParser(),
                 new BinanceParser()
             };
-            _priceProvider = new ExchangePriceProvider(cfg.FiatProvider);
+            var priceProvider = new CoinLayerDotComPriceProvider(cfg.FiatProvider);
 
             // Parser trades
 
@@ -56,11 +56,15 @@ namespace ComputeFIFOTaxes
 
             // Compute fiat values
 
-            trades.ComputeFiatValues(_priceProvider);
+            trades.ComputeFiatValues(priceProvider);
 
             // Compute fifo
 
+            var totalFees = trades.Select(u => u.FiatFees.Value).Sum();
 
+            Console.WriteLine("TotalFees: " + totalFees.ToString(CultureInfo.InvariantCulture) + " " + priceProvider.Coin.ToString());
+
+            
         }
     }
 }

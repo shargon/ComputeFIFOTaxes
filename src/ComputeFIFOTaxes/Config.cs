@@ -13,6 +13,7 @@ namespace ComputeFIFOTaxes
         public class FiatProviderConfig
         {
             public ECoin FiatCoin { get; set; }
+            public string ApiKey { get; set; }
         }
 
         public SheetConfig SpreadSheet { get; set; }

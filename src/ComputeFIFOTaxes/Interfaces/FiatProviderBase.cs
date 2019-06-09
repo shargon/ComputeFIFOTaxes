@@ -23,7 +23,7 @@ namespace ComputeFIFOTaxes.Interfaces
         private readonly string CacheFile;
 
         /// <summary>
-        /// Coint
+        /// Coin
         /// </summary>
         public ECoin Coin { get; }
 
