@@ -82,11 +82,7 @@ namespace ComputeFIFOTaxes.Providers
                 var responseData = requestData.Execute();
                 var data = responseData.Values.Select(u => u.ToArray()).ToList();
 
-                yield return new TradeData()
-                {
-                    Title = sheet,
-                    Data = data
-                };
+                yield return new TradeData(sheet, data);
             }
         }
 

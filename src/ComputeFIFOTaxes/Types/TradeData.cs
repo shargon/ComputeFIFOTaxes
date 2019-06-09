@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ComputeFIFOTaxes.Types
 {
@@ -8,12 +9,33 @@ namespace ComputeFIFOTaxes.Types
         /// <summary>
         /// Title
         /// </summary>
-        public string Title { get; set; }
+        public string Title { get; set; } = "";
 
         /// <summary>
         /// Data
         /// </summary>
-        public List<object[]> Data { get; set; }
+        public IList<object[]> Data { get; } = new List<object[]>();
+
+        /// <summary>
+        /// Parsed
+        /// </summary>
+        public bool Parsed { get; set; } = false;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public TradeData() { }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="sheet">Sheet</param>
+        /// <param name="data">Data</param>
+        public TradeData(string sheet, IEnumerable<object[]> data)
+        {
+            Title = sheet ?? "";
+            data.All(u => { Data.Add(u); return true; });
+        }
 
         /// <summary>
         /// String representation

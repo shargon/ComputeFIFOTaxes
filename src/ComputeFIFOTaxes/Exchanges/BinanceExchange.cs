@@ -10,9 +10,9 @@ namespace ComputeFIFOTaxes.Exchanges
 {
     public class BinanceExchange : IExchange
     {
-        public IEnumerable<Trade> GetTrades(TradeData data)
+        public IEnumerable<Trade> GetTrades(TradeDataSource dataSource, TradeData current)
         {
-            var fetch = data.Data.GetEnumerator();
+            var fetch = current.Data.GetEnumerator();
             if (!fetch.MoveNext()) yield break;
 
             var header = fetch.Current.Select(u => u.ToString()).ToArray();
@@ -112,11 +112,7 @@ namespace ComputeFIFOTaxes.Exchanges
                 case "NEOBTC": from = ECoin.NEO; to = ECoin.BTC; break;
                 case "GASBTC": from = ECoin.GAS; to = ECoin.BTC; break;
 
-                default:
-                    {
-                        to = from = ECoin.EUR;
-                        return false;
-                    }
+                default: throw new ArgumentException(coin);
             }
 
             return true;
@@ -138,7 +134,7 @@ namespace ComputeFIFOTaxes.Exchanges
                 case "XRP": return ECoin.XRP;
                 case "BNB": return ECoin.BNB;
 
-                default: throw new ArgumentException(nameof(coin));
+                default: throw new ArgumentException(coin);
             }
         }
 
@@ -146,8 +142,9 @@ namespace ComputeFIFOTaxes.Exchanges
         {
             var first = data.Data.FirstOrDefault();
 
-            return first != null &&
-                string.Join(",", first.Select(u => u.ToString()).ToArray()) == "Date(UTC),Market,Type,Price,Amount,Total,Fee,Fee Coin";
+            if (first == null) return false;
+
+            return string.Join(",", first.Select(u => u.ToString()).ToArray()) == "Date(UTC),Market,Type,Price,Amount,Total,Fee,Fee Coin";
         }
 
         /// <summary>

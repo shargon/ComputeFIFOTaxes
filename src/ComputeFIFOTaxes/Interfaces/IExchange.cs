@@ -15,8 +15,9 @@ namespace ComputeFIFOTaxes.Interfaces
         /// <summary>
         /// Get trades
         /// </summary>
-        /// <param name="data">Data</param>
+        /// <param name="dataSource">Data source</param>
+        /// <param name="current">Current</param>
         /// <returns>Return Trades</returns>
-        IEnumerable<Trade> GetTrades(TradeData data);
+        IEnumerable<Trade> GetTrades(TradeDataSource dataSource, TradeData current);
     }
 }

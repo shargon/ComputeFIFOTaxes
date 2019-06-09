@@ -2,18 +2,19 @@
 {
     public enum ECoin
     {
+        EUR,
+        USD,
         BTC,
         ETH,
+        USDT,
+
         EOS,
         XRP,
         BTT,
         HOT,
         BNB,
-        EUR,
-        USDT,
         NEO,
         GAS,
-        OMG,
-        USD
+        OMG
     }
 }

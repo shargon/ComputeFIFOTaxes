@@ -6,7 +6,7 @@ using ComputeFIFOTaxes.Types;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
+using System.Linq;
 
 namespace ComputeFIFOTaxes.Providers
 {
@@ -29,46 +29,48 @@ namespace ComputeFIFOTaxes.Providers
         {
             if (coin == Coin) return new FiatPrice(1, 1);
 
+            switch (coin)
+            {
+                case ECoin.BTC:
+                    {
+                        return new FiatPrice(1, 1);
+                    }
+                case ECoin.ETH:
+                    {
+                        return new FiatPrice(1, 1);
+                    }
+                case ECoin.USDT:
+                    {
+                        return new FiatPrice(1, 1);
+                    }
+                case ECoin.BNB:
+                    {
+                        return new FiatPrice(1, 1);
+                    }
+                default:
+                    {
+                        throw new ArgumentException("No market found");
+                    }
+            }
+
             switch (parser)
             {
                 // https://www.kraken.com/features/api#get-ohlc-data
 
                 case null:
-                case KrakenExchange _:
+                case KrakenTradesExchange _:
                     {
-                        var time = (date.AddSeconds(-date.Second)).ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
-
                         var minV = 0M;
                         var maxV = 0M;
 
                         foreach (var path in GetKrakenPathToCoin(coin))
                         {
-                            var arr = DownloadHelper.Download<KrakenResult<TimestampedDictionary<string, KrakenOHLC[]>>>(
-                                "https://api.kraken.com/0/public/OHLC?" + DownloadHelper.UrlEncode(new Dictionary<string, string>(3)
-                                {
-                                    ["pair"] = path,
-                                    ["interval"] = "1",
-                                    ["since"] = time.ToString(CultureInfo.InvariantCulture)
-                                }));
+                            var sience = GetKrakenTicks(path, date);
 
-                            var min = 0M;
-                            var max = 0M;
-                            var count = 0;
+                            if (sience == null) throw new ArgumentException(nameof(sience));
 
-                            if (arr.Result == null) throw new ArgumentException();
-
-                            foreach (var entry in arr.Result.Values)
-                            {
-                                foreach (var row in entry)
-                                {
-                                    max += row.High;
-                                    min += row.Low;
-                                    count++;
-                                }
-                            }
-
-                            min /= count;
-                            max /= count;
+                            var min = sience.Select(u => u.Low).Min();
+                            var max = sience.Select(u => u.Low).Max();
 
                             if (minV == 0)
                             {
@@ -89,7 +91,7 @@ namespace ComputeFIFOTaxes.Providers
 
                 case BinanceExchange _:
                     {
-                        var time = (date.AddSeconds(-date.Second)).ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
+                        var time = (long)(date.AddSeconds(-date.Second)).ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
 
                         // Parse to btc
 
@@ -137,6 +139,53 @@ namespace ComputeFIFOTaxes.Providers
             }
         }
 
+        private KrakenOHLC[] GetKrakenTicks(string path, DateTime date)
+        {
+            var time = (long)(date).ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
+
+            var sience = 0L;
+            var interval = 1440;
+            KrakenOHLC first = null, last = null;
+
+        START:
+
+            var arr = DownloadHelper.Download<KrakenResult<TimestampedDictionary<string, KrakenOHLC[]>>>(
+                "https://api.kraken.com/0/public/OHLC?" + DownloadHelper.UrlEncode(new Dictionary<string, string>(3)
+                {
+                    ["pair"] = path,
+                    ["interval"] = interval.ToString(),
+                    ["since"] = sience.ToString()
+                }));
+
+            if (arr.Result == null) throw new ArgumentException();
+
+            foreach (var entry in arr.Result.Values)
+            {
+                foreach (var row in entry)
+                {
+                    if (row.Time > time)
+                    {
+                        last = row;
+                        break;
+                    }
+
+                    first = row;
+                    sience = row.Time;
+                }
+            }
+
+            if (last != null)
+            {
+                if (first == null) throw new ArgumentException();
+
+                return new KrakenOHLC[] { first, last };
+            }
+            else
+            {
+                goto START;
+            }
+        }
+
         /// <summary>
         /// Get Binance path
         /// </summary>
@@ -163,6 +212,7 @@ namespace ComputeFIFOTaxes.Providers
 
             switch (coin)
             {
+                case ECoin.EOS:
                 case ECoin.BTC: return new string[] { "XBT" + Coin.ToString() };
             }
 

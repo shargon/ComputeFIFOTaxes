@@ -24,11 +24,28 @@ namespace ComputeFIFOTaxes.Types
         /// </summary>
         /// <param name="min">Minimum</param>
         /// <param name="max">Maximum</param>
-        public FiatPrice(decimal min, decimal max)
+        public FiatPrice(decimal min, decimal max) : this(min, max, (min + max) / 2) { }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="min">Minimum</param>
+        /// <param name="max">Maximum</param>
+        /// <param name="average">Average</param>
+        public FiatPrice(decimal min, decimal max, decimal average)
         {
             Min = min;
             Max = max;
-            Average = (min + max) / 2M;
+            Average = average;
+        }
+
+        /// <summary>
+        /// Plus with this price
+        /// </summary>
+        /// <param name="price">Price</param>
+        public FiatPrice Plus(decimal price)
+        {
+            return new FiatPrice(Min * price, Max * price, Average * price);
         }
 
         /// <summary>
