@@ -63,8 +63,6 @@ namespace ComputeFIFOTaxes
             var totalFees = trades.Select(u => u.FiatFees.Value).Sum();
 
             Console.WriteLine("TotalFees: " + totalFees.ToString(CultureInfo.InvariantCulture) + " " + priceProvider.Coin.ToString());
-
-            
         }
     }
 }
