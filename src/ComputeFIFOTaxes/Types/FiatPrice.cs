@@ -22,6 +22,11 @@ namespace ComputeFIFOTaxes.Types
         /// <summary>
         /// Constructor
         /// </summary>
+        public FiatPrice() : this(0, 0, 0) { }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
         /// <param name="min">Minimum</param>
         /// <param name="max">Maximum</param>
         public FiatPrice(decimal min, decimal max) : this(min, max, (min + max) / 2) { }
