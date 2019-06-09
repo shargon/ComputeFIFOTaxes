@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-namespace ComputeFIFOTaxes.Exchanges
+namespace ComputeFIFOTaxes.Parsers
 {
-    public class BinanceExchange : IExchange
+    public class BinanceParser : ITradeParser
     {
         public IEnumerable<Trade> GetTrades(TradeDataSource dataSource, TradeData current)
         {

@@ -1,5 +1,5 @@
-using ComputeFIFOTaxes.Exchanges;
 using ComputeFIFOTaxes.Interfaces;
+using ComputeFIFOTaxes.Parsers;
 using ComputeFIFOTaxes.Types;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -11,12 +11,12 @@ namespace ComputeFIFOTaxes.Tests.Parsers
     [TestClass]
     public class BinanceParserTest
     {
-        public IExchange _exchange;
+        public ITradeParser _exchange;
 
         [TestInitialize]
         public void Init()
         {
-            _exchange = new BinanceExchange();
+            _exchange = new BinanceParser();
         }
 
         [TestMethod]

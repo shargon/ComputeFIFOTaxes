@@ -1,5 +1,5 @@
-using ComputeFIFOTaxes.Exchanges;
 using ComputeFIFOTaxes.Interfaces;
+using ComputeFIFOTaxes.Parsers;
 using ComputeFIFOTaxes.Types;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -11,12 +11,12 @@ namespace ComputeFIFOTaxes.Tests.Parsers
     [TestClass]
     public class KrakenTradesParserTest
     {
-        public IExchange _exchange;
+        public ITradeParser _exchange;
 
         [TestInitialize]
         public void Init()
         {
-            _exchange = new KrakenTradesExchange();
+            _exchange = new KrakenTradesParser();
         }
 
         [TestMethod]
@@ -40,7 +40,7 @@ namespace ComputeFIFOTaxes.Tests.Parsers
             Assert.IsTrue(_exchange.IsThis(data));
 
             var source = new TradeDataSource() { Data = new TradeData[] { data } };
-            source.Variables[KrakenLedgerExchange.KrakenLedgerVariableName] = new Dictionary<string, IList<Quantity>>()
+            source.Variables[KrakenLedgerParser.KrakenLedgerVariableName] = new Dictionary<string, IList<Quantity>>()
             {
                 { "TK6PI7-LU6O6-4TFNSU", new Quantity[]{ new Quantity(){ Coin= ECoin.EUR, Value= 142.4183M } } },
                 { "TLREIQ-ESBRY-SYVMIE", new Quantity[]{ new Quantity(){ Coin= ECoin.EUR, Value= 142.4183M } } }

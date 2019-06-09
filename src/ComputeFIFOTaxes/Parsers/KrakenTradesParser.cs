@@ -6,12 +6,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-namespace ComputeFIFOTaxes.Exchanges
+namespace ComputeFIFOTaxes.Parsers
 {
     /// <summary>
     /// Trades without a valid fee
     /// </summary>
-    public class KrakenTradesExchange : IExchange
+    public class KrakenTradesParser : ITradeParser
     {
         public IEnumerable<Trade> GetTrades(TradeDataSource dataSource, TradeData current)
         {
@@ -87,7 +87,7 @@ namespace ComputeFIFOTaxes.Exchanges
 
         private Quantity[] FindFee(TradeDataSource dataSource, string txid)
         {
-            if (!dataSource.Variables.TryGetValue(KrakenLedgerExchange.KrakenLedgerVariableName, out var krakenFees) ||
+            if (!dataSource.Variables.TryGetValue(KrakenLedgerParser.KrakenLedgerVariableName, out var krakenFees) ||
                 !(krakenFees is Dictionary<string, IList<Quantity>> fees))
             {
                 return new Quantity[] { };

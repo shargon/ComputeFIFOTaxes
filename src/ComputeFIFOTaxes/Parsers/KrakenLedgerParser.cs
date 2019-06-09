@@ -6,12 +6,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-namespace ComputeFIFOTaxes.Exchanges
+namespace ComputeFIFOTaxes.Parsers
 {
     /// <summary>
     /// Is used because the fee contains the valid values
     /// </summary>
-    public class KrakenLedgerExchange : IExchange
+    public class KrakenLedgerParser : ITradeParser
     {
         internal const string KrakenLedgerVariableName = "KrakenLedger";
 

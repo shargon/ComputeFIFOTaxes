@@ -71,7 +71,7 @@ namespace ComputeFIFOTaxes.Interfaces
         /// <param name="coin">Coin</param>
         /// <param name="date">Date</param>
         /// <returns>Price</returns>
-        protected abstract FiatPrice InternalGetFiatPrice(IExchange parser, ECoin coin, DateTime date);
+        protected abstract FiatPrice InternalGetFiatPrice(ITradeParser parser, ECoin coin, DateTime date);
 
         /// <summary>
         /// Get fiat price for one coin in specific date
@@ -80,7 +80,7 @@ namespace ComputeFIFOTaxes.Interfaces
         /// <param name="coin">Coin</param>
         /// <param name="date">Date</param>
         /// <returns>Price</returns>
-        public FiatPrice GetFiatPrice(IExchange parser, ECoin coin, DateTime date)
+        public FiatPrice GetFiatPrice(ITradeParser parser, ECoin coin, DateTime date)
         {
             // Check same coin
 

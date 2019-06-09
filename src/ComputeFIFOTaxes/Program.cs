@@ -1,6 +1,6 @@
-﻿using ComputeFIFOTaxes.Exchanges;
-using ComputeFIFOTaxes.Helpers;
+﻿using ComputeFIFOTaxes.Helpers;
 using ComputeFIFOTaxes.Interfaces;
+using ComputeFIFOTaxes.Parsers;
 using ComputeFIFOTaxes.Providers;
 using ComputeFIFOTaxes.Types;
 using Newtonsoft.Json;
@@ -27,11 +27,11 @@ namespace ComputeFIFOTaxes
             var trades = new List<Trade>();
             var cfg = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
             var provider = new GoogleSheetsProvider(cfg);
-            var parsers = new IExchange[] 
+            var parsers = new ITradeParser[] 
             {
-                new KrakenLedgerExchange(), // Kraken Ledfer before Trades ALWAYS
-                new KrakenTradesExchange(),
-                new BinanceExchange()
+                new KrakenLedgerParser(), // Kraken Ledfer before Trades ALWAYS
+                new KrakenTradesParser(),
+                new BinanceParser()
             };
             _priceProvider = new ExchangePriceProvider(cfg.FiatProvider);
 

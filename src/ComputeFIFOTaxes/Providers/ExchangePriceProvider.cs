@@ -1,5 +1,4 @@
-﻿using ComputeFIFOTaxes.Exchanges;
-using ComputeFIFOTaxes.Helpers;
+﻿using ComputeFIFOTaxes.Helpers;
 using ComputeFIFOTaxes.Interfaces;
 using ComputeFIFOTaxes.Models;
 using ComputeFIFOTaxes.Types;
@@ -25,7 +24,7 @@ namespace ComputeFIFOTaxes.Providers
         /// <param name="coin">Coin</param>
         /// <param name="date">Date</param>
         /// <returns>Price</returns>
-        protected override FiatPrice InternalGetFiatPrice(IExchange parser, ECoin coin, DateTime date)
+        protected override FiatPrice InternalGetFiatPrice(ITradeParser parser, ECoin coin, DateTime date)
         {
             if (coin == Coin) return new FiatPrice(1, 1);
 
@@ -53,12 +52,13 @@ namespace ComputeFIFOTaxes.Providers
                     }
             }
 
+            /*
             switch (parser)
             {
                 // https://www.kraken.com/features/api#get-ohlc-data
 
                 case null:
-                case KrakenTradesExchange _:
+                case KrakenTradesParser _:
                     {
                         var minV = 0M;
                         var maxV = 0M;
@@ -89,7 +89,7 @@ namespace ComputeFIFOTaxes.Providers
 
                 //https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md
 
-                case BinanceExchange _:
+                case BinanceTradeParser _:
                     {
                         var time = (long)(date.AddSeconds(-date.Second)).ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
 
@@ -137,6 +137,7 @@ namespace ComputeFIFOTaxes.Providers
 
                 default: throw new ArgumentException(nameof(parser));
             }
+            */
         }
 
         private KrakenOHLC[] GetKrakenTicks(string path, DateTime date)

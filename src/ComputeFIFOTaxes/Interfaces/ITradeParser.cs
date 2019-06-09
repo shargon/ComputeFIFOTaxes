@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ComputeFIFOTaxes.Interfaces
 {
-    public interface IExchange
+    public interface ITradeParser
     {
         /// <summary>
         /// Is this provider
