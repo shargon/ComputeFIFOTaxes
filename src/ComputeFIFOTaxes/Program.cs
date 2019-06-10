@@ -54,15 +54,54 @@ namespace ComputeFIFOTaxes
 
             trades.SortByDate();
 
+            // Remove until first buy
+
+            var firstTrade = 0;
+
+            for (var m = trades.Count; firstTrade < m; firstTrade++)
+            {
+                if (trades[firstTrade].Type == ETradeType.Buy) break;
+            }
+
+            trades.RemoveRange(0, firstTrade);
+
             // Compute fiat values
 
             trades.ComputeFiatValues(priceProvider);
 
             // Compute fifo
 
-            var totalFees = trades.Select(u => u.FiatFees.Value).Sum();
+            var totalFees = 0M;
+            var dic = new Dictionary<ECoin, FIFO>();
 
-            Console.WriteLine("TotalFees: " + totalFees.ToString(CultureInfo.InvariantCulture) + " " + priceProvider.Coin.ToString());
+            foreach (var trade in trades)
+            {
+                totalFees += trade.FiatFees.Value;
+
+                if (trade is BuyTrade)
+                {
+                    if (!dic.TryGetValue(trade.To.Coin, out var fifo))
+                    {
+                        dic[trade.To.Coin] = fifo = new FIFO(trade.To.Coin);
+                    }
+
+                    fifo.AddBuy(trade);
+                }
+                else
+                {
+                    if (!dic.TryGetValue(trade.From.Coin, out var fifo))
+                    {
+                        dic[trade.From.Coin] = fifo = new FIFO(trade.From.Coin);
+                    }
+
+                    fifo.AddSell(trade);
+                }
+            }
+
+            Console.WriteLine("TotalFees: " + totalFees.ToString("0,000.00", CultureInfo.InvariantCulture) + " " + priceProvider.Coin.ToString());
+            Console.WriteLine("Beneficts: " + 
+                dic.Values.Select(u => u.FiatBeneficts).Sum()
+                .ToString("0,000.00", CultureInfo.InvariantCulture) + " " + priceProvider.Coin.ToString());
         }
     }
 }

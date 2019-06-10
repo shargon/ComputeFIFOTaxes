@@ -19,7 +19,11 @@ namespace ComputeFIFOTaxes.Helpers
         /// <param name="trades">Trades</param>
         public static void SortByDate(this List<Trade> trades)
         {
-            trades.Sort((a, b) => a.Date.CompareTo(b.Date));
+            trades.Sort((a, b) =>
+            {
+                var ret = a.Date.CompareTo(b.Date);
+                return ret == 0 ? ((byte)a.Type).CompareTo((byte)b.Type) : ret;
+            });
         }
 
         /// <summary>
@@ -33,7 +37,7 @@ namespace ComputeFIFOTaxes.Helpers
             {
                 if (!trade.FiatCostWithoutFees.HasValue)
                 {
-                    trade.FiatCostWithoutFees = trade.ChooseFiatPriceForTrade(provider, trade.Date);
+                    trade.FiatCostWithoutFees = trade.ChooseFiatValueForTrade(provider, trade.Date);
                 }
 
                 if (!trade.FiatFees.HasValue)
@@ -61,13 +65,13 @@ namespace ComputeFIFOTaxes.Helpers
         }
 
         /// <summary>
-        /// Choose the best price for this trade
+        /// Choose the best fiat value for this trade
         /// </summary>
         /// <param name="trade">Trade</param>
         /// <param name="provider">Provider</param>
         /// <param name="date">date</param>
         /// <returns>Decimal value</returns>
-        public static decimal ChooseFiatPriceForTrade(this Trade trade, FiatProviderBase provider, DateTime date)
+        public static decimal ChooseFiatValueForTrade(this Trade trade, FiatProviderBase provider, DateTime date)
         {
             // Check same as provider
 
@@ -86,14 +90,14 @@ namespace ComputeFIFOTaxes.Helpers
 
             foreach (var market in AvailableMarkets)
             {
-                if (trade.FromOrToIs(market))
-                {
-                    var price = provider.GetFiatPrice(trade.Exchange, market, date);
-                    price = price.Plus(trade.Price);
+                if (!trade.FromOrToIs(market)) continue;
 
-                    trade.Fees = trade.SumarizeFees(trade.From.Coin == market ? trade.To.Coin : trade.From.Coin);
-                    return trade is SellTrade ? price.Min : price.Max * trade.From.Value;
-                }
+                var price = provider.GetFiatPrice(trade.Exchange, market, date);
+
+                price = price.Plus(trade.From.Coin == market ? trade.From.Value : trade.To.Value);
+                trade.Fees = trade.SumarizeFees(trade.From.Coin == market ? trade.To.Coin : trade.From.Coin);
+
+                return price.Average; // trade is SellTrade ? price.Min : price.Max * trade.From.Value;
             }
 
             throw new ArgumentException("Market not found");

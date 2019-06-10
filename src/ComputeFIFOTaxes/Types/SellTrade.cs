@@ -9,5 +9,10 @@ namespace ComputeFIFOTaxes.Types
         /// </summary>
         [JsonIgnore]
         public override decimal Price => To.Value / From.Value;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public SellTrade() : base(ETradeType.Sell) { }
     }
 }

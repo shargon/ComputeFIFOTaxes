@@ -1,11 +1,23 @@
 ﻿using ComputeFIFOTaxes.Interfaces;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 
 namespace ComputeFIFOTaxes.Types
 {
     public abstract class Trade
     {
+        /// <summary>
+        /// Type
+        /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public ETradeType Type { get; }
+
+        /// <summary>
+        /// Date
+        /// </summary>
+        public DateTime Date { get; set; }
+
         /// <summary>
         /// Exchange
         /// </summary>
@@ -29,11 +41,6 @@ namespace ComputeFIFOTaxes.Types
         public Quantity To { get; set; }
 
         /// <summary>
-        /// Date
-        /// </summary>
-        public DateTime Date { get; set; }
-
-        /// <summary>
         /// Fee
         /// </summary>
         public Quantity[] Fees { get; set; }
@@ -55,6 +62,15 @@ namespace ComputeFIFOTaxes.Types
         /// </summary>
         /// <returns>Json string</returns>
         public override string ToString() => JsonConvert.SerializeObject(this);
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="type">Type</param>
+        protected Trade(ETradeType type)
+        {
+            Type = type;
+        }
 
         /// <summary>
         /// From or to is
