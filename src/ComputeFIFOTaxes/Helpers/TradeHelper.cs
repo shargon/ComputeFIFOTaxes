@@ -61,7 +61,7 @@ namespace ComputeFIFOTaxes.Helpers
         /// <returns>Decimal value</returns>
         public static decimal ChooseFiatPriceForFee(this Trade trade, FiatProviderBase provider, Quantity fee)
         {
-            return provider.GetFiatPrice(trade.Exchange, fee.Coin, trade.Date).Max * fee.Value;
+            return provider.GetFiatPrice(trade.Exchange, fee.Coin, trade.Date) * fee.Value;
         }
 
         /// <summary>
@@ -94,10 +94,10 @@ namespace ComputeFIFOTaxes.Helpers
 
                 var price = provider.GetFiatPrice(trade.Exchange, market, date);
 
-                price = price.Plus(trade.From.Coin == market ? trade.From.Value : trade.To.Value);
+                price *= (trade.From.Coin == market ? trade.From.Value : trade.To.Value);
                 trade.Fees = trade.SumarizeFees(trade.From.Coin == market ? trade.To.Coin : trade.From.Coin);
 
-                return price.Average; // trade is SellTrade ? price.Min : price.Max * trade.From.Value;
+                return price; // trade is SellTrade ? price.Min : price.Max * trade.From.Value;
             }
 
             throw new ArgumentException("Market not found");

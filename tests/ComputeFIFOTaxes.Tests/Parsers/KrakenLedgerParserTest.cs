@@ -29,13 +29,13 @@ namespace ComputeFIFOTaxes.Tests.Parsers
 
             // Ordered
 
-            data.Data.Add(new object[] { "LOCEOI-OZ3UZ-U4IGW3", "TK6PI7-LU6O6-4TFNSX", "2019-01-08 23:14", "trade", "currency", "XETH", "-495.336348", "0", "0.00000001" });
-            data.Data.Add(new object[] { "LOW427-2YEAY-KRSPN4", "TK6PI7-LU6O6-4TFNSX", "2019-01-08 23:14", "trade", "currency", "ZEUR", "64735.5072", "142.4183", "64593.0889" });
+            data.Data.Add(new object[] { "LOCEOI-OZ3UZ-U4IGW3", "TK6PI7-LU6O6-4TFNSX", "'2019-01-08 23:14:00.7934", "trade", "currency", "XETH", "-495.336348", "0", "0.00000001" });
+            data.Data.Add(new object[] { "LOW427-2YEAY-KRSPN4", "TK6PI7-LU6O6-4TFNSX", "'2019-01-08 23:14:00.7934", "trade", "currency", "ZEUR", "64735.5072", "142.4183", "64593.0889" });
 
             // Unordered
 
-            data.Data.Add(new object[] { "LOW427-2YEAY-KRSPN1", "TK6PI7-LU6O6-4TFNSA", "2019-01-08 23:14", "trade", "currency", "ZEUR", "64735.5072", "142.4183", "64593.0889" });
-            data.Data.Add(new object[] { "LOCEOI-OZ3UZ-U4IGW2", "TK6PI7-LU6O6-4TFNSA", "2019-01-08 23:14", "trade", "currency", "XETH", "-495.336348", "0", "0.00000001" });
+            data.Data.Add(new object[] { "LOW427-2YEAY-KRSPN1", "TK6PI7-LU6O6-4TFNSA", "'2019-01-08 23:14:00.7934", "trade", "currency", "ZEUR", "64735.5072", "142.4183", "64593.0889" });
+            data.Data.Add(new object[] { "LOCEOI-OZ3UZ-U4IGW2", "TK6PI7-LU6O6-4TFNSA", "'2019-01-08 23:14:00.7934", "trade", "currency", "XETH", "-495.336348", "0", "0.00000001" });
 
 
             Assert.IsTrue(_exchange.IsThis(data));

@@ -20,12 +20,12 @@ namespace ComputeFIFOTaxes.Parsers
 
             var header = fetch.Current.Select(u => u.ToString()).ToArray();
 
+            var vol = Array.IndexOf(header, "vol");
             var pair = Array.IndexOf(header, "pair");
             var time = Array.IndexOf(header, "time");
             var txid = Array.IndexOf(header, "txid");
             var cost = Array.IndexOf(header, "cost");
             var type = Array.IndexOf(header, "type");
-            var vol = Array.IndexOf(header, "vol");
 
             if (pair < 0 || time < 0 || txid < 0 || cost < 0 || type < 0 || vol < 0) yield break;
 
@@ -44,7 +44,7 @@ namespace ComputeFIFOTaxes.Parsers
                             yield return new BuyTrade()
                             {
                                 Exchange = this,
-                                Date = DateTime.ParseExact(row[time].ToString(), "yyyy-MM-dd H:mm", CultureInfo.InvariantCulture),
+                                Date = DateTime.ParseExact(PrepareDate(row[time].ToString()), "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture),
                                 From = new Quantity()
                                 {
                                     Coin = to,
@@ -64,7 +64,7 @@ namespace ComputeFIFOTaxes.Parsers
                             yield return new SellTrade()
                             {
                                 Exchange = this,
-                                Date = DateTime.ParseExact(row[time].ToString(), "yyyy-MM-dd H:mm", CultureInfo.InvariantCulture),
+                                Date = DateTime.ParseExact(PrepareDate(row[time].ToString()), "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture),
                                 From = new Quantity()
                                 {
                                     Coin = from,
@@ -85,6 +85,23 @@ namespace ComputeFIFOTaxes.Parsers
             }
         }
 
+        private string PrepareDate(string date)
+        {
+            // Remove kraken shit
+
+            date = date.Trim(new char[] { '\'', ' ' });
+
+            // Remove ms
+
+            var ix = date.LastIndexOf('.');
+            if (ix > 0)
+            {
+                date = date.Substring(0, ix);
+            }
+
+            return date;
+        }
+
         private Quantity[] FindFee(TradeDataSource dataSource, string txid)
         {
             if (!dataSource.Variables.TryGetValue(KrakenLedgerParser.KrakenLedgerVariableName, out var krakenFees) ||
@@ -95,6 +112,7 @@ namespace ComputeFIFOTaxes.Parsers
 
             if (fees.TryGetValue(txid, out var fee))
             {
+                fees.Remove(txid);
                 return fee.ToArray();
             }
 
@@ -105,9 +123,24 @@ namespace ComputeFIFOTaxes.Parsers
         {
             switch (coin.ToUpperInvariant())
             {
+                case "XXRPZEUR": from = ECoin.XRP; to = ECoin.EUR; break;
+                case "XLTCZEUR": from = ECoin.LTC; to = ECoin.EUR; break;
                 case "XETHZEUR": from = ECoin.ETH; to = ECoin.EUR; break;
                 case "XXBTZEUR": from = ECoin.BTC; to = ECoin.EUR; break;
+                case "XXLMZEUR": from = ECoin.XLM; to = ECoin.EUR; break;
                 case "EOSEUR": from = ECoin.EOS; to = ECoin.EUR; break;
+                case "DASHEUR": from = ECoin.DASH; to = ECoin.EUR; break;
+
+                case "USDTZUSD": from = ECoin.USDT; to = ECoin.USD; break;
+                case "XETHZUSD": from = ECoin.ETH; to = ECoin.USD; break;
+
+                case "XICNXETH": from = ECoin.ICONOMI; to = ECoin.ETH; break;
+
+                case "XXRPXXBT": from = ECoin.XRP; to = ECoin.BTC; break;
+                case "XXDGXXBT": from = ECoin.DOGE; to = ECoin.BTC; break;
+                case "XICNXXBT": from = ECoin.ICONOMI; to = ECoin.BTC; break;
+                case "XETHXXBT": from = ECoin.ETH; to = ECoin.BTC; break;
+                case "XLTCXXBT": from = ECoin.LTC; to = ECoin.BTC; break;
 
                 default: throw new ArgumentException(coin);
             }

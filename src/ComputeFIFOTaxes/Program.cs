@@ -11,7 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleToAttribute("ComputeFIFOTaxes.Tests")]
+[assembly: InternalsVisibleTo("ComputeFIFOTaxes.Tests")]
 
 namespace ComputeFIFOTaxes
 {
@@ -56,14 +56,14 @@ namespace ComputeFIFOTaxes
 
             // Remove until first buy
 
-            var firstTrade = 0;
+            //var firstTrade = 0;
 
-            for (var m = trades.Count; firstTrade < m; firstTrade++)
-            {
-                if (trades[firstTrade].Type == ETradeType.Buy) break;
-            }
+            //for (var m = trades.Count; firstTrade < m; firstTrade++)
+            //{
+            //    if (trades[firstTrade].Type == ETradeType.Buy) break;
+            //}
 
-            trades.RemoveRange(0, firstTrade);
+            //trades.RemoveRange(0, firstTrade);
 
             // Compute fiat values
 

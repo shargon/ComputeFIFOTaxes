@@ -15,6 +15,14 @@
         BNB,
         NEO,
         GAS,
-        OMG
+        OMG,
+        LTC,
+        DOGE,
+        ICONOMI,
+        XLM,
+        DASH,
+        NCASH,
+        STORM,
+        ONT
     }
 }

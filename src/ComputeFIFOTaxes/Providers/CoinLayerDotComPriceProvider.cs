@@ -40,10 +40,8 @@ namespace ComputeFIFOTaxes.Providers
         /// <param name="coin">Coin</param>
         /// <param name="date">Date</param>
         /// <returns>Price</returns>
-        protected override FiatPrice InternalGetFiatPrice(ITradeParser parser, ECoin coin, DateTime date)
+        protected override decimal InternalGetFiatPrice(ITradeParser parser, ECoin coin, DateTime date)
         {
-            if (coin == Coin) return new FiatPrice(1, 1);
-
             var ret = DownloadHelper.Download<JObject>
                 (
                 $"http://api.coinlayer.com/{date.ToString("yyyy-MM-dd")}?access_key={ApiKey}&symbols={GetCoin(coin)}&target={GetCoin(Coin)}&expand=1"
@@ -58,7 +56,7 @@ namespace ComputeFIFOTaxes.Providers
 
             var val = ((JProperty)rates.First).Value.ToObject<Entry>();
 
-            return new FiatPrice(val.Low, val.High, val.Rate);
+            return val.Rate;
         }
 
         /// <summary>

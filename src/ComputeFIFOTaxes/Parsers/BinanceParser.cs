@@ -33,7 +33,7 @@ namespace ComputeFIFOTaxes.Parsers
             {
                 var row = fetch.Current;
 
-                if (!ParseCoin(row[asset].ToString(), out var from, out var to)) continue;
+                if (row.Length < 8 || !ParseCoin(row[asset].ToString(), out var from, out var to)) continue;
 
                 switch (row[type].ToString().ToUpperInvariant())
                 {
@@ -104,13 +104,24 @@ namespace ComputeFIFOTaxes.Parsers
                 case "ETHUSDT": from = ECoin.ETH; to = ECoin.USDT; break;
                 case "BNBUSDT": from = ECoin.BNB; to = ECoin.USDT; break;
                 case "BTCUSDT": from = ECoin.BTC; to = ECoin.USDT; break;
+                case "NEOUSDT": from = ECoin.NEO; to = ECoin.USDT; break;
+                case "XRPUSDT": from = ECoin.XRP; to = ECoin.USDT; break;
+                case "ONTUSDT": from = ECoin.ONT; to = ECoin.USDT; break;
+
+                case "ETHBTC": from = ECoin.ETH; to = ECoin.BTC; break;
                 case "OMGBTC": from = ECoin.OMG; to = ECoin.BTC; break;
                 case "BTTBTC": from = ECoin.BTT; to = ECoin.BTC; break;
                 case "HOTBTC": from = ECoin.HOT; to = ECoin.BTC; break;
-                case "BNBETH": from = ECoin.BNB; to = ECoin.ETH; break;
-                case "NEOETH": from = ECoin.NEO; to = ECoin.ETH; break;
                 case "NEOBTC": from = ECoin.NEO; to = ECoin.BTC; break;
                 case "GASBTC": from = ECoin.GAS; to = ECoin.BTC; break;
+                case "XRPBTC": from = ECoin.XRP; to = ECoin.BTC; break;
+                case "ONTBTC": from = ECoin.ONT; to = ECoin.BTC; break;
+
+                case "BNBETH": from = ECoin.BNB; to = ECoin.ETH; break;
+                case "NEOETH": from = ECoin.NEO; to = ECoin.ETH; break;
+                case "OMGETH": from = ECoin.OMG; to = ECoin.ETH; break;
+                case "NCASHETH": from = ECoin.NCASH; to = ECoin.ETH; break;
+                case "STORMETH": from = ECoin.STORM; to = ECoin.ETH; break;
 
                 default: throw new ArgumentException(coin);
             }
@@ -133,6 +144,8 @@ namespace ComputeFIFOTaxes.Parsers
                 case "GAS": return ECoin.GAS;
                 case "XRP": return ECoin.XRP;
                 case "BNB": return ECoin.BNB;
+                case "NCASH": return ECoin.NCASH;
+                case "STORM": return ECoin.STORM;
 
                 default: throw new ArgumentException(coin);
             }

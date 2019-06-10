@@ -72,12 +72,20 @@ namespace ComputeFIFOTaxes.Parsers
         {
             switch (coin.ToUpperInvariant())
             {
+                case "USDT": return ECoin.USDT;
+                case "ZUSD": return ECoin.USD;
                 case "ZEUR": return ECoin.EUR;
                 case "XETH": return ECoin.ETH;
+                case "XXRP": return ECoin.XRP;
                 case "XXBT": return ECoin.BTC;
                 case "EOS": return ECoin.EOS;
+                case "XLTC": return ECoin.LTC;
+                case "XXDG": return ECoin.DOGE;
+                case "XICN": return ECoin.ICONOMI;
+                case "XXLM": return ECoin.XLM;
+                case "DASH": return ECoin.DASH;
 
-                default: throw new ArgumentException(nameof(coin));
+                default: throw new ArgumentException(coin);
             }
         }
 

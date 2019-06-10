@@ -30,11 +30,11 @@ namespace ComputeFIFOTaxes.Tests.Parsers
 
             // Sell
 
-            data.Data.Add(new object[] { "TK6PI7-LU6O6-4TFNSU", "OL4PWT-PATIC-H34G7C", "XETHZEUR", "2019-01-08 23:14", "sell", "limit", "130.69", "64735.5073", "142.41814", "495.336348", "0", "", "LOW427-2YEAY-KRSPNH,LOCEOI-OZ3UZ-U4IGWP" });
+            data.Data.Add(new object[] { "TK6PI7-LU6O6-4TFNSU", "OL4PWT-PATIC-H34G7C", "XETHZEUR", "'2019-01-08 23:14:00.1234", "sell", "limit", "130.69", "64735.5073", "142.41814", "495.336348", "0", "", "LOW427-2YEAY-KRSPNH,LOCEOI-OZ3UZ-U4IGWP" });
 
             // Buy
 
-            data.Data.Add(new object[] { "TLREIQ-ESBRY-SYVMIE", "ORS77A-PB5OK-GJLNBM", "XETHZEUR", "2019-01-09 21:35", "buy", "limit", "129.37", "6468.5", "14.2307", "50", "0", "", "LRUCE5-2P6JX-UPBY2F,LF5JER-3CDMZ-WJIGQK" });
+            data.Data.Add(new object[] { "TLREIQ-ESBRY-SYVMIE", "ORS77A-PB5OK-GJLNBM", "XETHZEUR", "'2019-01-09 21:35:00.1234", "buy", "limit", "129.37", "6468.5", "14.2307", "50", "0", "", "LRUCE5-2P6JX-UPBY2F,LF5JER-3CDMZ-WJIGQK" });
 
 
             Assert.IsTrue(_exchange.IsThis(data));

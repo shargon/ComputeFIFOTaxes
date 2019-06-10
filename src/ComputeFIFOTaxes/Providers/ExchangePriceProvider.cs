@@ -1,9 +1,12 @@
 ﻿using ComputeFIFOTaxes.Helpers;
 using ComputeFIFOTaxes.Interfaces;
 using ComputeFIFOTaxes.Models;
+using ComputeFIFOTaxes.Parsers;
 using ComputeFIFOTaxes.Types;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ComputeFIFOTaxes.Providers
 {
@@ -22,35 +25,8 @@ namespace ComputeFIFOTaxes.Providers
         /// <param name="coin">Coin</param>
         /// <param name="date">Date</param>
         /// <returns>Price</returns>
-        protected override FiatPrice InternalGetFiatPrice(ITradeParser parser, ECoin coin, DateTime date)
+        protected override decimal InternalGetFiatPrice(ITradeParser parser, ECoin coin, DateTime date)
         {
-            if (coin == Coin) return new FiatPrice(1, 1);
-
-            switch (coin)
-            {
-                case ECoin.BTC:
-                    {
-                        return new FiatPrice(1, 1);
-                    }
-                case ECoin.ETH:
-                    {
-                        return new FiatPrice(1, 1);
-                    }
-                case ECoin.USDT:
-                    {
-                        return new FiatPrice(1, 1);
-                    }
-                case ECoin.BNB:
-                    {
-                        return new FiatPrice(1, 1);
-                    }
-                default:
-                    {
-                        throw new ArgumentException("No market found");
-                    }
-            }
-
-            /*
             switch (parser)
             {
                 // https://www.kraken.com/features/api#get-ohlc-data
@@ -68,7 +44,7 @@ namespace ComputeFIFOTaxes.Providers
                             if (sience == null) throw new ArgumentException(nameof(sience));
 
                             var min = sience.Select(u => u.Low).Min();
-                            var max = sience.Select(u => u.Low).Max();
+                            var max = sience.Select(u => u.High).Max();
 
                             if (minV == 0)
                             {
@@ -82,12 +58,12 @@ namespace ComputeFIFOTaxes.Providers
                             }
                         }
 
-                        return new FiatPrice(minV, maxV);
+                        return (minV + maxV) / 2M;
                     }
 
                 //https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md
 
-                case BinanceTradeParser _:
+                case BinanceParser _:
                     {
                         var time = (long)(date.AddSeconds(-date.Second)).ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
 
@@ -95,6 +71,7 @@ namespace ComputeFIFOTaxes.Providers
 
                         var minV = 0M;
                         var maxV = 0M;
+                        var avgV = 0M;
 
                         foreach (var path in GetBinancePathToBtc(coin))
                         {
@@ -104,38 +81,40 @@ namespace ComputeFIFOTaxes.Providers
 
                             var min = 0M;
                             var max = 0M;
+                            var avg = 0M;
 
                             foreach (JArray entry in arr)
                             {
-                                max += entry[2].Value<Decimal>();
-                                min += entry[3].Value<Decimal>();
+                                max += entry[2].Value<decimal>();
+                                min += entry[3].Value<decimal>();
+                                avg += entry[4].Value<decimal>();
                             }
 
                             min /= arr.Length;
                             max /= arr.Length;
+                            avg /= arr.Length;
 
                             if (minV == 0)
                             {
                                 minV = min;
                                 maxV = max;
+                                avgV = avg;
                             }
                             else
                             {
                                 minV *= min;
                                 maxV *= max;
+                                avgV *= avg;
                             }
                         }
 
                         // Kraken price for bitcoin
 
-                        var btc = GetFiatPrice(null, ECoin.BTC, date);
-
-                        return new FiatPrice(minV * btc.Min, maxV * btc.Max);
+                        return GetFiatPrice(null, ECoin.BTC, date) * avgV;
                     }
 
                 default: throw new ArgumentException(nameof(parser));
             }
-            */
         }
 
         private KrakenOHLC[] GetKrakenTicks(string path, DateTime date)

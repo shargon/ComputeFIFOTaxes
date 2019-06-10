@@ -15,7 +15,7 @@ namespace ComputeFIFOTaxes.Interfaces
         /// <summary>
         /// Cache
         /// </summary>
-        private readonly Dictionary<ECoin, Dictionary<DateTime, Dictionary<ECoin, FiatPrice>>> _cache;
+        private readonly Dictionary<ECoin, Dictionary<ECoin, Dictionary<DateTime, decimal>>> _cache;
 
         /// <summary>
         /// Cache file
@@ -48,7 +48,7 @@ namespace ComputeFIFOTaxes.Interfaces
 
                 try
                 {
-                    var data = JsonConvert.DeserializeObject<Dictionary<ECoin, Dictionary<DateTime, Dictionary<ECoin, FiatPrice>>>>(File.ReadAllText(CacheFile));
+                    var data = JsonConvert.DeserializeObject<Dictionary<ECoin, Dictionary<ECoin, Dictionary<DateTime, decimal>>>>(File.ReadAllText(CacheFile));
                     if (data != null) _cache = data;
 
 #if DEBUG
@@ -60,7 +60,7 @@ namespace ComputeFIFOTaxes.Interfaces
 
             if (_cache == null)
             {
-                _cache = new Dictionary<ECoin, Dictionary<DateTime, Dictionary<ECoin, FiatPrice>>>();
+                _cache = new Dictionary<ECoin, Dictionary<ECoin, Dictionary<DateTime, decimal>>>();
             }
         }
 
@@ -71,7 +71,7 @@ namespace ComputeFIFOTaxes.Interfaces
         /// <param name="coin">Coin</param>
         /// <param name="date">Date</param>
         /// <returns>Price</returns>
-        protected abstract FiatPrice InternalGetFiatPrice(ITradeParser parser, ECoin coin, DateTime date);
+        protected abstract decimal InternalGetFiatPrice(ITradeParser parser, ECoin coin, DateTime date);
 
         /// <summary>
         /// Get fiat price for one coin in specific date
@@ -80,40 +80,35 @@ namespace ComputeFIFOTaxes.Interfaces
         /// <param name="coin">Coin</param>
         /// <param name="date">Date</param>
         /// <returns>Price</returns>
-        public FiatPrice GetFiatPrice(ITradeParser parser, ECoin coin, DateTime date)
+        public decimal GetFiatPrice(ITradeParser parser, ECoin coin, DateTime date)
         {
             // Check same coin
 
             if (coin == Coin)
             {
-                return new FiatPrice(1, 1);
+                return 1;
+            }
+
+            if (!_cache.TryGetValue(coin, out var cache))
+            {
+                cache = _cache[coin] = new Dictionary<ECoin, Dictionary<DateTime, decimal>>();
             }
 
             // Search inside the cache
 
-            Dictionary<ECoin, FiatPrice> value;
-
-            if (_cache.TryGetValue(coin, out var data))
+            if (!cache.TryGetValue(Coin, out var cacheEntry))
             {
-                if (!data.TryGetValue(date, out value))
-                {
-                    data[date] = value = new Dictionary<ECoin, FiatPrice>();
-                }
-            }
-            else
-            {
-                data = _cache[coin] = new Dictionary<DateTime, Dictionary<ECoin, FiatPrice>>();
-                data[date] = value = new Dictionary<ECoin, FiatPrice>();
+                cacheEntry = cache[Coin] = new Dictionary<DateTime, decimal>();
             }
 
-            if (value.TryGetValue(Coin, out var result) && result.Average != 0)
+            if (cacheEntry.TryGetValue(date, out var result) && result != 0)
             {
                 return result;
             }
 
             // Add to cache
 
-            var ret = value[Coin] = InternalGetFiatPrice(parser, coin, date);
+            var ret = cacheEntry[date] = InternalGetFiatPrice(parser, coin, date);
 
             File.WriteAllText(CacheFile, JsonConvert.SerializeObject(_cache, Formatting.Indented));
 
