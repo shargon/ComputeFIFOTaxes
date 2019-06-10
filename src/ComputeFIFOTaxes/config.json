@@ -5,6 +5,7 @@
     },
     "fiatProvider":
     {
-        "fiatCoin": "EUR"
+        "fiatCoin": "EUR",
+        "apiKey": ""
     }
 }
