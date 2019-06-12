@@ -8,6 +8,9 @@ using System.Linq;
 
 namespace ComputeFIFOTaxes.Providers
 {
+    /// <summary>
+    /// https://api.coinpaprika.com/#tag/Tickers/paths/~1tickers~1{coin_id}/get
+    /// </summary>
     public class CoinPaprikaPriceProvider : FiatProviderBase
     {
         private class CoinInfo
