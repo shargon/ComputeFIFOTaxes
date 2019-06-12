@@ -33,7 +33,7 @@ namespace ComputeFIFOTaxes
                 new KrakenTradesParser(),
                 new BinanceParser()
             };
-            var priceProvider = new CoinLayerDotComPriceProvider(cfg.FiatProvider);
+            var priceProvider = new CoinPaprikaPriceProvider(cfg.FiatProvider);
 
             // Parser trades
 
@@ -54,54 +54,45 @@ namespace ComputeFIFOTaxes
 
             trades.SortByDate();
 
-            // Remove until first buy
-
-            //var firstTrade = 0;
-
-            //for (var m = trades.Count; firstTrade < m; firstTrade++)
-            //{
-            //    if (trades[firstTrade].Type == ETradeType.Buy) break;
-            //}
-
-            //trades.RemoveRange(0, firstTrade);
-
             // Compute fiat values
 
             trades.ComputeFiatValues(priceProvider);
 
             // Compute fifo
 
-            var totalFees = 0M;
-            var dic = new Dictionary<ECoin, FIFO>();
-
-            foreach (var trade in trades)
-            {
-                totalFees += trade.FiatFees.Value;
-
-                if (trade is BuyTrade)
+            var profits = new Dictionary<int, YearProfit>();
+            trades.ComputeFifo(out var fifo,
+                (date, fee) =>
                 {
-                    if (!dic.TryGetValue(trade.To.Coin, out var fifo))
+                    if (!profits.TryGetValue(date.Year, out var profit))
                     {
-                        dic[trade.To.Coin] = fifo = new FIFO(trade.To.Coin);
+                        profit = new YearProfit()
+                        {
+                            Year = date.Year
+                        };
+
+                        profits.Add(profit.Year, profit);
                     }
 
-                    fifo.AddBuy(trade);
-                }
-                else
+                    profit.Fee += fee;
+                },
+                (sellDate, buyPrice, sellPrice, amount) =>
                 {
-                    if (!dic.TryGetValue(trade.From.Coin, out var fifo))
+                    if (!profits.TryGetValue(sellDate.Year, out var profit))
                     {
-                        dic[trade.From.Coin] = fifo = new FIFO(trade.From.Coin);
+                        profit = new YearProfit()
+                        {
+                            Year = sellDate.Year
+                        };
+
+                        profits.Add(profit.Year, profit);
                     }
 
-                    fifo.AddSell(trade);
+                    profit.Profit += (amount * sellPrice) - (amount * buyPrice);
                 }
-            }
+            );
 
-            Console.WriteLine("TotalFees: " + totalFees.ToString("0,000.00", CultureInfo.InvariantCulture) + " " + priceProvider.Coin.ToString());
-            Console.WriteLine("Beneficts: " + 
-                dic.Values.Select(u => u.FiatBeneficts).Sum()
-                .ToString("0,000.00", CultureInfo.InvariantCulture) + " " + priceProvider.Coin.ToString());
+            Console.WriteLine(JsonConvert.SerializeObject(profits.Values.ToArray(), Formatting.Indented));
         }
     }
 }

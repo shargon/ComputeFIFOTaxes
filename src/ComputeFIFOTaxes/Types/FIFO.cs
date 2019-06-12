@@ -32,14 +32,9 @@ namespace ComputeFIFOTaxes.Types
 
         private readonly Queue<FIFOInternal> _list = new Queue<FIFOInternal>();
 
-        public delegate void delOnFifoSell(DateTime date, decimal buyValue, decimal sellValue, decimal amount);
+        public delegate void delOnFifoSell(DateTime date, decimal buyPrice, decimal sellPrice, decimal amount);
 
         public event delOnFifoSell OnFifoSell;
-
-        /// <summary>
-        /// Fiat beneficts
-        /// </summary>
-        public decimal FiatBeneficts { get; private set; } = 0M;
 
         /// <summary>
         /// Coin
@@ -97,7 +92,11 @@ namespace ComputeFIFOTaxes.Types
         /// <returns>Return true if was sold</returns>
         private bool Sell(FIFOInternal sell)
         {
-            if (_list.Count <= 0) return false;
+            if (_list.Count <= 0)
+            {
+                OnFifoSell?.Invoke(sell.Date, 0, sell.Price, sell.Amount);
+                return false;
+            }
 
             decimal amount;
             var buy = _list.Peek();
@@ -122,9 +121,7 @@ namespace ComputeFIFOTaxes.Types
                 _list.Dequeue();
             }
 
-            FiatBeneficts += (amount * sell.Price) - (amount * buy.Price);
-            OnFifoSell?.Invoke(sell.Date, amount * buy.Price, amount * sell.Price, amount);
-
+            OnFifoSell?.Invoke(sell.Date, buy.Price, sell.Price, amount);
             return true;
         }
 

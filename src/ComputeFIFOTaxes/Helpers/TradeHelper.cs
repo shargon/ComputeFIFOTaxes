@@ -65,6 +65,44 @@ namespace ComputeFIFOTaxes.Helpers
         }
 
         /// <summary>
+        /// Compute fifo
+        /// </summary>
+        /// <param name="trades">Trades</param>
+        /// <param name="fifoCollection">Collection</param>
+        /// <param name="onFees">On fee</param>
+        /// <param name="onFifoSell">On fifo sell</param>
+        public static void ComputeFifo(this IEnumerable<Trade> trades, out Dictionary<ECoin, FIFO> fifoCollection, Action<DateTime, decimal> onFees, FIFO.delOnFifoSell onFifoSell)
+        {
+            fifoCollection = new Dictionary<ECoin, FIFO>();
+
+            foreach (var trade in trades)
+            {
+                onFees?.Invoke(trade.Date, trade.FiatFees.Value);
+
+                if (trade is BuyTrade)
+                {
+                    if (!fifoCollection.TryGetValue(trade.To.Coin, out var fifo))
+                    {
+                        fifoCollection[trade.To.Coin] = fifo = new FIFO(trade.To.Coin);
+                        fifo.OnFifoSell += onFifoSell;
+                    }
+
+                    fifo.AddBuy(trade);
+                }
+                else
+                {
+                    if (!fifoCollection.TryGetValue(trade.From.Coin, out var fifo))
+                    {
+                        fifoCollection[trade.From.Coin] = fifo = new FIFO(trade.From.Coin);
+                        fifo.OnFifoSell += onFifoSell;
+                    }
+
+                    fifo.AddSell(trade);
+                }
+            }
+        }
+
+        /// <summary>
         /// Choose the best fiat value for this trade
         /// </summary>
         /// <param name="trade">Trade</param>
@@ -97,7 +135,7 @@ namespace ComputeFIFOTaxes.Helpers
                 price *= (trade.From.Coin == market ? trade.From.Value : trade.To.Value);
                 trade.Fees = trade.SumarizeFees(trade.From.Coin == market ? trade.To.Coin : trade.From.Coin);
 
-                return price; // trade is SellTrade ? price.Min : price.Max * trade.From.Value;
+                return price;
             }
 
             throw new ArgumentException("Market not found");
@@ -118,10 +156,23 @@ namespace ComputeFIFOTaxes.Helpers
             {
                 if (trade.Fees[x].Coin == from)
                 {
+                    var isFrom = trade.From.Coin == from;
+                    var value = trade.Fees[x].Value;
+
+                    if (trade is BuyTrade)
+                    {
+                        value = !isFrom ? value * price : value / price;
+                    }
+                    else if (trade is SellTrade)
+                    {
+                        value = isFrom ? value * price : value / price;
+                    }
+                    else throw new ArgumentException();
+
                     ret[x] = new Quantity()
                     {
-                        Coin = trade.From.Coin == from ? trade.To.Coin : trade.From.Coin,
-                        Value = trade.From.Coin == from ? trade.Fees[x].Value * price : trade.Fees[x].Value / price
+                        Coin = isFrom ? trade.To.Coin : trade.From.Coin,
+                        Value = value
                     };
                 }
                 else

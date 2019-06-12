@@ -185,7 +185,7 @@ namespace ComputeFIFOTaxes.Tests
 
         #endregion
 
-        #region Sell
+        #region Buy
 
         [TestMethod]
         public void Sumarize_BuyFeeTo()
@@ -195,32 +195,32 @@ namespace ComputeFIFOTaxes.Tests
                 Date = DateTime.UtcNow,
                 From = new Quantity()
                 {
-                    Coin = ECoin.ETH,
-                    Value = 10M
+                    Coin = ECoin.BTC,
+                    Value = 0.0686M
                 },
                 To = new Quantity()
                 {
-                    Coin = ECoin.BTC,
-                    Value = 0.5M
+                    Coin = ECoin.XRP,
+                    Value = 686.8M
                 },
                 Fees = new Quantity[]
                 {
                     new Quantity()
                     {
-                         Coin= ECoin.ETH,
-                         Value= 0.1M
+                         Coin= ECoin.XRP,
+                         Value= 1.1M
                     }
                 }
             };
 
-            Assert.AreEqual(trade.Price, 20M);
+            Assert.AreEqual(trade.Price, 0.0000998835177635410599883518M);
 
             CollectionAssert.AreEqual(new Quantity[]
             {
                 new Quantity()
                 {
                      Coin = ECoin.BTC,
-                     Value = 2M
+                     Value = 0.0001098718695398951659871870M
                 }
             },
             trade.SumarizeFees(trade.Fees[0].Coin));
@@ -259,7 +259,7 @@ namespace ComputeFIFOTaxes.Tests
                 new Quantity()
                 {
                      Coin = ECoin.BTC,
-                     Value = 2M
+                     Value = 0.005M
                 }
             },
             trade.SumarizeFees(trade.Fees[0].Coin));
