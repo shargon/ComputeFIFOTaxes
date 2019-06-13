@@ -1,8 +1,8 @@
 # ComputeFIFOTaxes
 
-Compute your crypto taxes
+Compute your crypto taxes and pay your taxes!
 
-Thanks to coinpaprika.com for his amazing work!
+*Thanks to coinpaprika.com for his amazing work!*
 
 Allowed exchanges:
 
