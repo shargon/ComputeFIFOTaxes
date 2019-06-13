@@ -32,7 +32,15 @@ namespace ComputeFIFOTaxes.Parsers
 
             if (time < 0 || type < 0 || refid < 0 || asset < 0 || amount < 0 || fee < 0) yield break;
 
-            var dic = new Dictionary<string, IList<Quantity>>();
+            Dictionary<string, IList<Quantity>> dic;
+            if (dataSource.Variables.TryGetValue(KrakenLedgerVariableName, out var dicObj))
+            {
+                dic = (Dictionary<string, IList<Quantity>>)dicObj;
+            }
+            else
+            {
+                dataSource.Variables[KrakenLedgerVariableName] = dic = new Dictionary<string, IList<Quantity>>();
+            }
 
             while (fetch.MoveNext())
             {
@@ -64,7 +72,6 @@ namespace ComputeFIFOTaxes.Parsers
                 list.Add(realfee);
             }
 
-            dataSource.Variables[KrakenLedgerVariableName] = dic;
             yield break;
         }
 

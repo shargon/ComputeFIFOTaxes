@@ -77,7 +77,10 @@ namespace ComputeFIFOTaxes.Helpers
 
             foreach (var trade in trades)
             {
-                onFees?.Invoke(trade.Date, trade.FiatFees.Value);
+                if (trade.FiatFees.HasValue)
+                {
+                    onFees?.Invoke(trade.Date, trade.FiatFees.Value);
+                }
 
                 if (trade is BuyTrade)
                 {
