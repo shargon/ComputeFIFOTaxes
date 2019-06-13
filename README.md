@@ -22,6 +22,7 @@ Requite a config.json like this
     "fiatProvider":
     {
         "fiatCoin": "EUR",
+        "usdPerEur" : 0.88,
         "apiKey": ""
     }
 }
