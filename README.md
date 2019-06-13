@@ -11,7 +11,7 @@ Allowed exchanges:
 
 You must create a Google spreadsheet with all the information, each file on different sheets.
 
-Requite a config.json like this
+Require a config.json like this
 
 ```json
 {
