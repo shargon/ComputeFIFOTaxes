@@ -1,4 +1,6 @@
-﻿using ComputeFIFOTaxes.Types;
+﻿using System;
+using System.IO;
+using ComputeFIFOTaxes.Types;
 using Newtonsoft.Json;
 
 namespace ComputeFIFOTaxes
@@ -18,6 +20,21 @@ namespace ComputeFIFOTaxes
 
         public SheetConfig SpreadSheet { get; set; }
         public FiatProviderConfig FiatProvider { get; set; }
+
+        /// <summary>
+        /// Parse config from file
+        /// </summary>
+        /// <param name="file">File</param>
+        /// <returns>Config</returns>
+        public static Config FromFile(string file)
+        {
+            if (!File.Exists(file))
+            {
+                File.WriteAllText(file, JsonConvert.SerializeObject(new Config(), Formatting.Indented));
+            }
+
+            return JsonConvert.DeserializeObject<Config>(File.ReadAllText(file));
+        }
 
         /// <summary>
         /// String representation

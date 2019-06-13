@@ -6,7 +6,6 @@ using ComputeFIFOTaxes.Types;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
@@ -18,13 +17,7 @@ namespace ComputeFIFOTaxes
     {
         static void Main()
         {
-            if (!File.Exists("config.json"))
-            {
-                File.WriteAllText("config.json", JsonConvert.SerializeObject(new Config(), Formatting.Indented));
-            }
-
-            var trades = new List<Trade>();
-            var cfg = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
+            var cfg = Config.FromFile("config.json");
             var provider = new GoogleSheetsProvider(cfg);
             var parsers = new ITradeParser[]
             {
@@ -36,6 +29,7 @@ namespace ComputeFIFOTaxes
 
             // Parser trades
 
+            var trades = new List<Trade>();
             var dataSource = new TradeDataSource() { Data = provider.GetData().ToArray() };
 
             foreach (var parser in parsers)
