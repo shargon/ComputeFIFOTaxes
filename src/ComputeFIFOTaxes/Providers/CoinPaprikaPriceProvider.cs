@@ -39,11 +39,15 @@ namespace ComputeFIFOTaxes.Providers
             public decimal Price { get; set; }
         }
 
-        public const decimal USD_PER_EUR = 0.88M;
         private readonly DateTime UnixTimestamp = new DateTime(1970, 1, 1);
 
         private readonly static IDictionary<string, string> _exchangeCache = new Dictionary<string, string>();
         private readonly static IDictionary<string, string> _coinCache = new Dictionary<string, string>();
+
+        /// <summary>
+        /// USD per EUR
+        /// </summary>
+        public decimal UsdPerEur { get; } = 0;
 
         /// <summary>
         /// Constructor
@@ -51,6 +55,8 @@ namespace ComputeFIFOTaxes.Providers
         /// <param name="config">Config</param>
         public CoinPaprikaPriceProvider(Config.FiatProviderConfig config) : base(config.FiatCoin)
         {
+            UsdPerEur = config.UsdPerEur;
+
             if (_coinCache.Count == 0)
             {
                 var coins = DownloadHelper.Download<CoinInfo[]>("https://api.coinpaprika.com/v1/coins", false);
@@ -108,7 +114,7 @@ namespace ComputeFIFOTaxes.Providers
             switch (Coin)
             {
                 case ECoin.USD: return usdValue;
-                case ECoin.EUR: return usdValue * USD_PER_EUR;
+                case ECoin.EUR: return usdValue * UsdPerEur;
 
                 default: throw new ArgumentException(nameof(CoinInfo));
             }
