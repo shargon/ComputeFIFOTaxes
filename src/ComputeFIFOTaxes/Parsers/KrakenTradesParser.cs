@@ -13,6 +13,8 @@ namespace ComputeFIFOTaxes.Parsers
     /// </summary>
     public class KrakenTradesParser : ITradeParser
     {
+        public string Name => "Kraken-Trades";
+
         public IEnumerable<Trade> GetTrades(TradeDataSource dataSource, TradeData current)
         {
             var fetch = current.Data.GetEnumerator();

@@ -10,6 +10,8 @@ namespace ComputeFIFOTaxes.Parsers
 {
     public class BinanceParser : ITradeParser
     {
+        public string Name => "Binance";
+
         public IEnumerable<Trade> GetTrades(TradeDataSource dataSource, TradeData current)
         {
             var fetch = current.Data.GetEnumerator();
@@ -35,6 +37,8 @@ namespace ComputeFIFOTaxes.Parsers
 
                 if (row.Length < 8 || !ParseCoin(row[asset].ToString(), out var from, out var to)) continue;
 
+                var dfee = decimal.Parse(row[fee].ToString(), CultureInfo.InvariantCulture);
+
                 switch (row[type].ToString().ToUpperInvariant())
                 {
                     case "BUY":
@@ -52,12 +56,12 @@ namespace ComputeFIFOTaxes.Parsers
                                     Coin = from,
                                     Value = decimal.Parse(row[amount].ToString(), CultureInfo.InvariantCulture)
                                 },
-                                Fees = new Quantity[]
+                                Fees = dfee == 0 ? new Quantity[0] : new Quantity[]
                                 {
                                     new Quantity()
                                     {
                                         Coin = ParseCoin(row[feeCoin].ToString()),
-                                        Value = decimal.Parse(row[fee].ToString(), CultureInfo.InvariantCulture)
+                                        Value = dfee
                                     }
                                 },
                                 Date = DateTime.ParseExact(row[date].ToString(), "yyyy-MM-dd H:mm:ss", CultureInfo.InvariantCulture)
@@ -79,12 +83,12 @@ namespace ComputeFIFOTaxes.Parsers
                                     Coin = to,
                                     Value = decimal.Parse(row[total].ToString(), CultureInfo.InvariantCulture)
                                 },
-                                Fees = new Quantity[]
+                                Fees = dfee == 0 ? new Quantity[0] : new Quantity[]
                                 {
                                     new Quantity()
                                     {
                                         Coin = ParseCoin(row[feeCoin].ToString()),
-                                        Value = decimal.Parse(row[fee].ToString(), CultureInfo.InvariantCulture)
+                                        Value = dfee
                                     }
                                 },
                                 Date = DateTime.ParseExact(row[date].ToString(), "yyyy-MM-dd H:mm:ss", CultureInfo.InvariantCulture)
@@ -122,6 +126,8 @@ namespace ComputeFIFOTaxes.Parsers
                 case "OMGETH": from = ECoin.OMG; to = ECoin.ETH; break;
                 case "NCASHETH": from = ECoin.NCASH; to = ECoin.ETH; break;
                 case "STORMETH": from = ECoin.STORM; to = ECoin.ETH; break;
+
+                case "BTTBNB": from = ECoin.BTT; to = ECoin.BNB; break;
 
                 default: throw new ArgumentException(coin);
             }

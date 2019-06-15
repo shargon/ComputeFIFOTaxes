@@ -6,6 +6,11 @@ namespace ComputeFIFOTaxes.Interfaces
     public interface ITradeParser
     {
         /// <summary>
+        /// Parser name
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
         /// Is this provider
         /// </summary>
         /// <param name="data">Data</param>

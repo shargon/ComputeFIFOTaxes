@@ -14,6 +14,7 @@ namespace ComputeFIFOTaxes.Parsers
     public class KrakenLedgerParser : ITradeParser
     {
         internal const string KrakenLedgerVariableName = "KrakenLedger";
+        public string Name => "Kraken-Ledger";
 
         public IEnumerable<Trade> GetTrades(TradeDataSource dataSource, TradeData current)
         {
