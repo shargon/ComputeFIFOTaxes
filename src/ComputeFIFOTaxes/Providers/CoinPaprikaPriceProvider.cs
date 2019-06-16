@@ -45,9 +45,9 @@ namespace ComputeFIFOTaxes.Providers
         private readonly static IDictionary<string, string> _coinCache = new Dictionary<string, string>();
 
         /// <summary>
-        /// USD per EUR
+        /// USD per Coin
         /// </summary>
-        public decimal UsdPerEur { get; } = 0;
+        public decimal UsdPerCoin { get; } = 0;
 
         /// <summary>
         /// Constructor
@@ -55,7 +55,7 @@ namespace ComputeFIFOTaxes.Providers
         /// <param name="config">Config</param>
         public CoinPaprikaPriceProvider(Config.FiatProviderConfig config) : base(config.FiatCoin)
         {
-            UsdPerEur = config.UsdPerEur;
+            UsdPerCoin = config.UsdPerCoin;
 
             if (_coinCache.Count == 0)
             {
@@ -114,9 +114,7 @@ namespace ComputeFIFOTaxes.Providers
             switch (Coin)
             {
                 case ECoin.USD: return usdValue;
-                case ECoin.EUR: return usdValue * UsdPerEur;
-
-                default: throw new ArgumentException(nameof(CoinInfo));
+                default: return usdValue * UsdPerCoin;
             }
         }
 

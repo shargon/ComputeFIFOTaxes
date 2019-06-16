@@ -16,7 +16,7 @@ namespace ComputeFIFOTaxes
         {
             public ECoin FiatCoin { get; set; }
             public string ApiKey { get; set; }
-            public decimal UsdPerEur { get; set; }
+            public decimal UsdPerCoin { get; set; }
         }
 
         public SheetConfig SpreadSheet { get; set; }

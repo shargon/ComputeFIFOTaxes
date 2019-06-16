@@ -6,7 +6,7 @@
     "fiatProvider":
     {
         "fiatCoin": "EUR",
-        "usdPerEur": 0.88,
+        "usdPerCoin": 0.88,
         "apiKey": ""
     }
 }
