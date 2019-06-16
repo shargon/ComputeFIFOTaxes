@@ -24,6 +24,7 @@ namespace ComputeFIFOTaxes
             {
                 new KrakenLedgerParser(), // Kraken Ledfer before Trades ALWAYS
                 new KrakenTradesParser(),
+                new BittrexParser(),
                 new BinanceParser()
             };
             var priceProvider = new CoinPaprikaPriceProvider(cfg.FiatProvider);

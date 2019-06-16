@@ -23,6 +23,24 @@
         DASH,
         NCASH,
         STORM,
-        ONT
+        ONT,
+        MONA,
+        ZEC,
+        WAVES,
+        WINGS,
+        IOC,
+        BRX,
+        SHIFT,
+        XEL,
+        SALT,
+        MCO,
+        ARK,
+        UBQ,
+        GAME,
+        QRL,
+        STRAT,
+        STEEM,
+        BNT,
+        BAT
     }
 }
