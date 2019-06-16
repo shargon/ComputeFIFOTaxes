@@ -32,7 +32,8 @@ namespace ComputeFIFOTaxes.Types
 
         private readonly Queue<FIFOInternal> _list = new Queue<FIFOInternal>();
 
-        public delegate void delOnFifoSell(DateTime date, decimal buyPrice, decimal sellPrice, decimal amount);
+        public delegate void delOnFifoSell(Trade trade, decimal buyPrice, decimal sellPrice, decimal amount);
+        public delegate void delOnFee(Trade trade, decimal fee);
 
         public event delOnFifoSell OnFifoSell;
 
@@ -79,7 +80,7 @@ namespace ComputeFIFOTaxes.Types
                 Price = trade.FiatCostWithoutFees.Value / trade.From.Value
             };
 
-            while (Sell(fifo) && fifo.Amount > 0)
+            while (Sell(trade, fifo) && fifo.Amount > 0)
             {
 
             }
@@ -88,13 +89,14 @@ namespace ComputeFIFOTaxes.Types
         /// <summary>
         /// Sell fifo
         /// </summary>
+        /// <param name="trade">Trade</param>
         /// <param name="sell">Sell</param>
         /// <returns>Return true if was sold</returns>
-        private bool Sell(FIFOInternal sell)
+        private bool Sell(Trade trade, FIFOInternal sell)
         {
             if (_list.Count <= 0)
             {
-                OnFifoSell?.Invoke(sell.Date, 0, sell.Price, sell.Amount);
+                OnFifoSell?.Invoke(trade, 0, sell.Price, sell.Amount);
                 return false;
             }
 
@@ -121,7 +123,7 @@ namespace ComputeFIFOTaxes.Types
                 _list.Dequeue();
             }
 
-            OnFifoSell?.Invoke(sell.Date, buy.Price, sell.Price, amount);
+            OnFifoSell?.Invoke(trade, buy.Price, sell.Price, amount);
             return true;
         }
 

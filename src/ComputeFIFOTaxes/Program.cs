@@ -17,6 +17,7 @@ namespace ComputeFIFOTaxes
     {
         static void Main()
         {
+            Console.ForegroundColor = ConsoleColor.Gray;
             var cfg = Config.FromFile("config.json");
             var provider = new GoogleSheetsProvider(cfg);
             var parsers = new ITradeParser[]
@@ -55,13 +56,13 @@ namespace ComputeFIFOTaxes
 
             var profits = new Dictionary<int, YearProfit>();
             trades.ComputeFifo(out var fifo,
-                (date, fee) =>
+                (trade, fee) =>
                 {
-                    if (!profits.TryGetValue(date.Year, out var profit))
+                    if (!profits.TryGetValue(trade.Date.Year, out var profit))
                     {
                         profit = new YearProfit()
                         {
-                            Year = date.Year
+                            Year = trade.Date.Year
                         };
 
                         profits.Add(profit.Year, profit);
@@ -69,13 +70,18 @@ namespace ComputeFIFOTaxes
 
                     profit.Fee += fee;
                 },
-                (sellDate, buyPrice, sellPrice, amount) =>
+                (trade, buyPrice, sellPrice, amount) =>
                 {
-                    if (!profits.TryGetValue(sellDate.Year, out var profit))
+                    if (buyPrice <= 0)
+                    {
+                        //Console.WriteLine("Buy not found for: " + trade.ToString());
+                    }
+
+                    if (!profits.TryGetValue(trade.Date.Year, out var profit))
                     {
                         profit = new YearProfit()
                         {
-                            Year = sellDate.Year
+                            Year = trade.Date.Year
                         };
 
                         profits.Add(profit.Year, profit);
@@ -85,7 +91,9 @@ namespace ComputeFIFOTaxes
                 }
             );
 
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine(JsonConvert.SerializeObject(profits.Values.ToArray(), Formatting.Indented));
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
     }
 }

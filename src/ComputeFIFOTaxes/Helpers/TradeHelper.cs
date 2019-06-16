@@ -71,7 +71,7 @@ namespace ComputeFIFOTaxes.Helpers
         /// <param name="fifoCollection">Collection</param>
         /// <param name="onFees">On fee</param>
         /// <param name="onFifoSell">On fifo sell</param>
-        public static void ComputeFifo(this IEnumerable<Trade> trades, out Dictionary<ECoin, FIFO> fifoCollection, Action<DateTime, decimal> onFees, FIFO.delOnFifoSell onFifoSell)
+        public static void ComputeFifo(this IEnumerable<Trade> trades, out Dictionary<ECoin, FIFO> fifoCollection, FIFO.delOnFee onFees, FIFO.delOnFifoSell onFifoSell)
         {
             fifoCollection = new Dictionary<ECoin, FIFO>();
 
@@ -79,7 +79,7 @@ namespace ComputeFIFOTaxes.Helpers
             {
                 if (trade.FiatFees.HasValue)
                 {
-                    onFees?.Invoke(trade.Date, trade.FiatFees.Value);
+                    onFees?.Invoke(trade, trade.FiatFees.Value);
                 }
 
                 if (trade is BuyTrade)
