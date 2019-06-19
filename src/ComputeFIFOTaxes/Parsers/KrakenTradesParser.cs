@@ -133,6 +133,8 @@ namespace ComputeFIFOTaxes.Parsers
                 case "EOSEUR": from = ECoin.EOS; to = ECoin.EUR; break;
                 case "DASHEUR": from = ECoin.DASH; to = ECoin.EUR; break;
 
+                case "NEXZUSD": from = ECoin.NEX; to = ECoin.USD; break;
+
                 case "USDTZUSD": from = ECoin.USDT; to = ECoin.USD; break;
                 case "XETHZUSD": from = ECoin.ETH; to = ECoin.USD; break;
 

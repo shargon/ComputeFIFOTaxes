@@ -31,7 +31,7 @@ namespace ComputeFIFOTaxes.Providers
         private class TickInfo
         {
             public DateTime Date => DateTime.ParseExact(Timestamp, "yyyy-MM-dd'T'HH:mm:ss'Z'", DateTimeFormatInfo.InvariantInfo);
-            
+
             /// <summary>
             /// 2017-05-04T14:00:00Z
             /// </summary>
@@ -45,18 +45,11 @@ namespace ComputeFIFOTaxes.Providers
         private readonly static IDictionary<string, string> _coinCache = new Dictionary<string, string>();
 
         /// <summary>
-        /// USD per Coin
-        /// </summary>
-        public decimal UsdPerCoin { get; } = 0;
-
-        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="config">Config</param>
-        public CoinPaprikaPriceProvider(Config.FiatProviderConfig config) : base(config.FiatCoin)
+        public CoinPaprikaPriceProvider(Config.FiatProviderConfig config) : base(config)
         {
-            UsdPerCoin = config.UsdPerCoin;
-
             if (_coinCache.Count == 0)
             {
                 var coins = DownloadHelper.Download<CoinInfo[]>("https://api.coinpaprika.com/v1/coins", false);

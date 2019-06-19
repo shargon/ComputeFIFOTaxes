@@ -46,6 +46,7 @@
         BSV,
         EMC2,
         LSK,
-        IOP
+        IOP,
+        NEX
     }
 }

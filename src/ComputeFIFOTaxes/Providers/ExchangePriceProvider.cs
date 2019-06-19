@@ -16,7 +16,7 @@ namespace ComputeFIFOTaxes.Providers
         /// Constructor
         /// </summary>
         /// <param name="config">Config</param>
-        public ExchangePriceProvider(Config.FiatProviderConfig config) : base(config.FiatCoin) { }
+        public ExchangePriceProvider(Config.FiatProviderConfig config) : base(config) { }
 
         /// <summary>
         /// Get fiat price for one coin in specific date

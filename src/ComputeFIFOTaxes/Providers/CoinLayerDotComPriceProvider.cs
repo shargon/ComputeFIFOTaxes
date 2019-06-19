@@ -28,7 +28,7 @@ namespace ComputeFIFOTaxes.Providers
         /// Constructor
         /// </summary>
         /// <param name="config">Config</param>
-        public CoinLayerDotComPriceProvider(Config.FiatProviderConfig config) : base(config.FiatCoin)
+        public CoinLayerDotComPriceProvider(Config.FiatProviderConfig config) : base(config)
         {
             ApiKey = config.ApiKey;
         }

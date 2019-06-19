@@ -10,7 +10,7 @@ namespace ComputeFIFOTaxes.Providers
         /// Constructor
         /// </summary>
         /// <param name="config">Config</param>
-        public ManualPriceProvider(Config.FiatProviderConfig config) : base(config.FiatCoin) { }
+        public ManualPriceProvider(Config.FiatProviderConfig config) : base(config) { }
 
         protected override decimal InternalGetFiatPrice(ITradeParser parser, ECoin coin, DateTime date) => 0M;
     }

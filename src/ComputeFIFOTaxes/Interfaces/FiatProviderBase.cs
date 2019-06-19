@@ -28,16 +28,22 @@ namespace ComputeFIFOTaxes.Interfaces
         public ECoin Coin { get; }
 
         /// <summary>
+        /// USD per Coin
+        /// </summary>
+        public decimal UsdPerCoin { get; } = 0;
+
+        /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="coin">Coin</param>
-        public FiatProviderBase(ECoin coin)
+        /// <param name="config">Config</param>
+        public FiatProviderBase(Config.FiatProviderConfig config)
         {
-            Coin = coin;
+            Coin = config.FiatCoin;
+            UsdPerCoin = config.UsdPerCoin;
 
             if (Coin != ECoin.EUR && Coin != ECoin.USD)
             {
-                throw new ArgumentException(nameof(coin));
+                throw new ArgumentException(nameof(Coin));
             }
 
             CacheFile = "marketCache.json";
@@ -87,6 +93,11 @@ namespace ComputeFIFOTaxes.Interfaces
             if (coin == Coin)
             {
                 return 1;
+            }
+
+            if (coin == ECoin.USD)
+            {
+                return UsdPerCoin;
             }
 
             if (!_cache.TryGetValue(coin, out var cache))

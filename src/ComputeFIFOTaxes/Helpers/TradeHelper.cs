@@ -126,6 +126,16 @@ namespace ComputeFIFOTaxes.Helpers
                 trade.Fees = trade.SumarizeFees(trade.From.Coin == provider.Coin ? trade.To.Coin : trade.From.Coin);
                 return trade.To.Value;
             }
+            else if (trade.From.Coin == ECoin.USD)
+            {
+                trade.Fees = trade.SumarizeFees(trade.From.Coin == provider.Coin ? trade.To.Coin : trade.From.Coin);
+                return trade.From.Value * provider.UsdPerCoin;
+            }
+            else if (trade.To.Coin == ECoin.USD)
+            {
+                trade.Fees = trade.SumarizeFees(trade.From.Coin == provider.Coin ? trade.To.Coin : trade.From.Coin);
+                return trade.To.Value * provider.UsdPerCoin;
+            }
 
             // Check BTC first
 
