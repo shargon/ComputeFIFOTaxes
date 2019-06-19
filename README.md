@@ -8,6 +8,7 @@ Allowed exchanges:
 
 - Kraken: Ledger and Trades
 - Binance: Trades
+- Bittrex: fullOrders
 
 You must create a Google spreadsheet with all the information, each file on different sheets.
 
@@ -22,7 +23,7 @@ Require a config.json like this
     "fiatProvider":
     {
         "fiatCoin": "EUR",
-        "usdPerEur" : 0.88,
+        "UsdPerCoin" : 0.88,
         "apiKey": ""
     }
 }
