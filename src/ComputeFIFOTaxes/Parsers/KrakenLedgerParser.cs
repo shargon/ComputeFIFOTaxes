@@ -80,6 +80,8 @@ namespace ComputeFIFOTaxes.Parsers
         {
             switch (coin.ToUpperInvariant())
             {
+                case "BSV": return ECoin.BSV;
+                case "BCH": return ECoin.BCH;
                 case "USDT": return ECoin.USDT;
                 case "ZUSD": return ECoin.USD;
                 case "ZEUR": return ECoin.EUR;

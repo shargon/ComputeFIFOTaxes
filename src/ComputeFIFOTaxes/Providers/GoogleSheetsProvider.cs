@@ -13,6 +13,9 @@ using System.Threading;
 
 namespace ComputeFIFOTaxes.Providers
 {
+    /// <summary>
+    /// Credentials.json at https://developers.google.com/sheets/api/quickstart/dotnet
+    /// </summary>
     public class GoogleSheetsProvider : ITradeProvider
     {
         const string ApplicationName = "Trade Taxes";

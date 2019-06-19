@@ -41,6 +41,11 @@
         STRAT,
         STEEM,
         BNT,
-        BAT
+        BAT,
+        BCH,
+        BSV,
+        EMC2,
+        LSK,
+        IOP
     }
 }

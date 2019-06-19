@@ -134,6 +134,10 @@ namespace ComputeFIFOTaxes.Parsers
                 case "BTC-STRAT": from = ECoin.BTC; to = ECoin.STRAT; break;
                 case "BTC-STEEM": from = ECoin.BTC; to = ECoin.STEEM; break;
                 case "BTC-BAT": from = ECoin.BTC; to = ECoin.BAT; break;
+                case "BTC-EMC2": from = ECoin.BTC; to = ECoin.EMC2; break;
+                case "BTC-LSK": from = ECoin.BTC; to = ECoin.LSK; break;
+                case "BTC-IOP": from = ECoin.BTC; to = ECoin.IOP; break;
+                case "BTC-BNT": from = ECoin.BTC; to = ECoin.BNT; break;
 
                 default: throw new ArgumentException(coin);
             }
