@@ -12,6 +12,8 @@ Allowed exchanges:
 
 You must create a Google spreadsheet with all the information, each file on different sheets.
 
+For credentials.json look at https://developers.google.com/sheets/api/quickstart/dotnet
+
 Require a config.json like this
 
 ```json
