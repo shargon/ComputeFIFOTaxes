@@ -42,6 +42,11 @@ namespace ComputeFIFOTaxes.Providers
         /// <returns>Price</returns>
         protected override decimal InternalGetFiatPrice(ITradeParser parser, ECoin coin, DateTime date)
         {
+            if (coin == ECoin.USD)
+            {
+                return FiatProviderHelper.UsdPerCoin(Coin, date);
+            }
+
             var ret = DownloadHelper.Download<JObject>
                 (
                 $"http://api.coinlayer.com/{date.ToString("yyyy-MM-dd")}?access_key={ApiKey}&symbols={GetCoin(coin)}&target={GetCoin(Coin)}&expand=1"

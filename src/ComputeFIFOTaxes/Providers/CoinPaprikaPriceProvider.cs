@@ -76,6 +76,11 @@ namespace ComputeFIFOTaxes.Providers
 
         protected override decimal InternalGetFiatPrice(ITradeParser parser, ECoin coin, DateTime date)
         {
+            if (coin == ECoin.USD)
+            {
+                return FiatProviderHelper.UsdPerCoin(Coin, date);
+            }
+
             var preparedDate = date.AddSeconds(-date.Second);
             preparedDate = preparedDate.AddMinutes(-5);
 
@@ -94,20 +99,22 @@ namespace ComputeFIFOTaxes.Providers
                 usdPrice = tick.Price;
             }
 
-            return UsdToPrice(usdPrice);
+            return UsdToPrice(usdPrice, date);
         }
 
         /// <summary>
         /// Convert usd to the fiat price
         /// </summary>
         /// <param name="usdValue">Usd value</param>
+        /// <param name="date">Date</param>
         /// <returns>Value</returns>
-        private decimal UsdToPrice(decimal usdValue)
+        private decimal UsdToPrice(decimal usdValue, DateTime date)
         {
             switch (Coin)
             {
                 case ECoin.USD: return usdValue;
-                default: return usdValue * UsdPerCoin;
+
+                default: return usdValue * GetFiatPrice(null, ECoin.USD, date);
             }
         }
 

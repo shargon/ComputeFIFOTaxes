@@ -129,12 +129,12 @@ namespace ComputeFIFOTaxes.Helpers
             else if (trade.From.Coin == ECoin.USD)
             {
                 trade.Fees = trade.SumarizeFees(trade.From.Coin == provider.Coin ? trade.To.Coin : trade.From.Coin);
-                return trade.From.Value * provider.UsdPerCoin;
+                return trade.From.Value * provider.GetFiatPrice(null, ECoin.USD, date);
             }
             else if (trade.To.Coin == ECoin.USD)
             {
                 trade.Fees = trade.SumarizeFees(trade.From.Coin == provider.Coin ? trade.To.Coin : trade.From.Coin);
-                return trade.To.Value * provider.UsdPerCoin;
+                return trade.To.Value * provider.GetFiatPrice(null, ECoin.USD, date);
             }
 
             // Check BTC first

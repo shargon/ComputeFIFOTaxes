@@ -1,4 +1,5 @@
-﻿using ComputeFIFOTaxes.Types;
+﻿using ComputeFIFOTaxes.Helpers;
+using ComputeFIFOTaxes.Types;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -28,18 +29,12 @@ namespace ComputeFIFOTaxes.Interfaces
         public ECoin Coin { get; }
 
         /// <summary>
-        /// USD per Coin
-        /// </summary>
-        public decimal UsdPerCoin { get; } = 0;
-
-        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="config">Config</param>
         public FiatProviderBase(Config.FiatProviderConfig config)
         {
             Coin = config.FiatCoin;
-            UsdPerCoin = config.UsdPerCoin;
 
             if (Coin != ECoin.EUR && Coin != ECoin.USD)
             {
@@ -93,11 +88,6 @@ namespace ComputeFIFOTaxes.Interfaces
             if (coin == Coin)
             {
                 return 1;
-            }
-
-            if (coin == ECoin.USD)
-            {
-                return UsdPerCoin;
             }
 
             if (!_cache.TryGetValue(coin, out var cache))
