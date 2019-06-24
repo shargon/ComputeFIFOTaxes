@@ -1,4 +1,4 @@
-﻿using ComputeFIFOTaxes.Helpers;
+using ComputeFIFOTaxes.Helpers;
 using ComputeFIFOTaxes.Interfaces;
 using ComputeFIFOTaxes.Parsers;
 using ComputeFIFOTaxes.Providers;
@@ -88,12 +88,14 @@ namespace ComputeFIFOTaxes
                         profits.Add(profit.Year, profit);
                     }
 
+                    profit.Buyed += (amount * buyPrice);
+                    profit.Sold += (amount * sellPrice);
                     profit.Profit += (amount * sellPrice) - (amount * buyPrice);
                 }
             );
 
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine(JsonConvert.SerializeObject(profits.Values.ToArray(), Formatting.Indented));
+            Console.WriteLine(JsonConvert.SerializeObject(profits, Formatting.Indented));
             Console.ForegroundColor = ConsoleColor.Gray;
         }
     }

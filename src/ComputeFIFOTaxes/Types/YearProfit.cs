@@ -7,7 +7,18 @@ namespace ComputeFIFOTaxes.Types
         /// <summary>
         /// Year
         /// </summary>
+        [JsonIgnore]
         public int Year { get; set; } = 0;
+
+        /// <summary>
+        /// Total buy
+        /// </summary>
+        public decimal Buyed { get; set; } = 0;
+
+        /// <summary>
+        /// Total sold
+        /// </summary>
+        public decimal Sold { get; set; } = 0;
 
         /// <summary>
         /// Profit
