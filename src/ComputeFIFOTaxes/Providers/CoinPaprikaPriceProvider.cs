@@ -48,17 +48,26 @@ namespace ComputeFIFOTaxes.Providers
         /// Constructor
         /// </summary>
         /// <param name="config">Config</param>
-        public CoinPaprikaPriceProvider(Config.FiatProviderConfig config) : base(config)
+        public CoinPaprikaPriceProvider(Config.FiatProviderConfig config) : base(config) { }
+
+        protected override decimal InternalGetFiatPrice(ITradeParser parser, ECoin coin, DateTime date)
         {
+            if (coin == ECoin.USD)
+            {
+                return FiatProviderHelper.UsdPerCoin(Coin, date);
+            }
+
             if (_coinCache.Count == 0)
             {
+                // Fill cache
+
                 var coins = DownloadHelper.Download<CoinInfo[]>("https://api.coinpaprika.com/v1/coins", false);
 
-                foreach (var coin in coins.Where(u => u.Rank > 0).OrderBy(u => u.Rank))
+                foreach (var c in coins.Where(u => u.Rank > 0).OrderBy(u => u.Rank))
                 {
-                    if (!_coinCache.ContainsKey(coin.Symbol))
+                    if (!_coinCache.ContainsKey(c.Symbol))
                     {
-                        _coinCache[coin.Symbol] = coin.Id;
+                        _coinCache[c.Symbol] = c.Id;
                     }
                 }
 
@@ -71,14 +80,6 @@ namespace ComputeFIFOTaxes.Providers
                         _exchangeCache[exchage.Name] = exchage.Id;
                     }
                 }
-            }
-        }
-
-        protected override decimal InternalGetFiatPrice(ITradeParser parser, ECoin coin, DateTime date)
-        {
-            if (coin == ECoin.USD)
-            {
-                return FiatProviderHelper.UsdPerCoin(Coin, date);
             }
 
             var preparedDate = date.AddSeconds(-date.Second);
