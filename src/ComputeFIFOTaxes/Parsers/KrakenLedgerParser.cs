@@ -94,6 +94,7 @@ namespace ComputeFIFOTaxes.Parsers
                 case "XICN": return ECoin.ICONOMI;
                 case "XXLM": return ECoin.XLM;
                 case "DASH": return ECoin.DASH;
+                case "KFEE": return ECoin.KFEE;
 
                 default: throw new ArgumentException(coin);
             }

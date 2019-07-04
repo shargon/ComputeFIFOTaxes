@@ -47,6 +47,8 @@
         EMC2,
         LSK,
         IOP,
-        NEX
+        NEX,
+        XMR,
+        KFEE
     }
 }

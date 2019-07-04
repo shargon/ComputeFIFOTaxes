@@ -90,6 +90,13 @@ namespace ComputeFIFOTaxes.Interfaces
                 return 1;
             }
 
+            if (coin == ECoin.KFEE)
+            {
+                // Kraken fees
+
+                return 0;
+            }
+
             if (!_cache.TryGetValue(coin, out var cache))
             {
                 cache = _cache[coin] = new Dictionary<ECoin, Dictionary<DateTime, decimal>>();

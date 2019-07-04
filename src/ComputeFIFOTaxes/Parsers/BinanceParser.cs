@@ -111,6 +111,7 @@ namespace ComputeFIFOTaxes.Parsers
                 case "NEOUSDT": from = ECoin.NEO; to = ECoin.USDT; break;
                 case "XRPUSDT": from = ECoin.XRP; to = ECoin.USDT; break;
                 case "ONTUSDT": from = ECoin.ONT; to = ECoin.USDT; break;
+                case "XMRUSDT": from = ECoin.XMR; to = ECoin.USDT; break;
 
                 case "ETHBTC": from = ECoin.ETH; to = ECoin.BTC; break;
                 case "OMGBTC": from = ECoin.OMG; to = ECoin.BTC; break;
