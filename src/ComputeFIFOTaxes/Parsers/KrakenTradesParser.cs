@@ -46,7 +46,7 @@ namespace ComputeFIFOTaxes.Parsers
                             yield return new BuyTrade()
                             {
                                 Exchange = this,
-                                Date = DateTime.ParseExact(PrepareDate(row[time].ToString()), "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture),
+                                Date = ParseDate(row[time].ToString()),
                                 From = new Quantity()
                                 {
                                     Coin = to,
@@ -66,7 +66,7 @@ namespace ComputeFIFOTaxes.Parsers
                             yield return new SellTrade()
                             {
                                 Exchange = this,
-                                Date = DateTime.ParseExact(PrepareDate(row[time].ToString()), "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture),
+                                Date = ParseDate(row[time].ToString()),
                                 From = new Quantity()
                                 {
                                     Coin = from,
@@ -87,7 +87,7 @@ namespace ComputeFIFOTaxes.Parsers
             }
         }
 
-        private string PrepareDate(string date)
+        private DateTime ParseDate(string date)
         {
             // Remove kraken shit
 
@@ -96,12 +96,17 @@ namespace ComputeFIFOTaxes.Parsers
             // Remove ms
 
             var ix = date.LastIndexOf('.');
+            var ms = 0;
             if (ix > 0)
             {
+                ms = Convert.ToInt32(date.Substring(ix + 1));
                 date = date.Substring(0, ix);
             }
 
-            return date;
+            var ret = DateTime.ParseExact(date, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+            ret = ret.AddTicks(ms);
+
+            return ret;
         }
 
         private Quantity[] FindFee(TradeDataSource dataSource, string txid)
