@@ -17,7 +17,7 @@ before_install:
 script:
  - dotnet restore
  - find * -name *.csproj | xargs -I % dotnet add % package coverlet.msbuild
- - dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+ - dotnet test ComputeFIFOTaxes.Tests/ComputeFIFOTaxes.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
 
 after_success:
   # After all tests OK, Send CodeDov report
