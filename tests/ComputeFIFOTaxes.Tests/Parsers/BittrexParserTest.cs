@@ -30,11 +30,11 @@ namespace ComputeFIFOTaxes.Tests.Parsers
 
             // Buy
 
-            data.Data.Add(new object[] { "031d20b1-6394-4ea5-b89b-52fe677fc731", "USDT-BTC", "LIMIT_BUY", "0.00117194", "8042.82891", "0.02356428", "9.42571291", "12/16/2017 7:12:09", "12/16/2017 20:04:17" });
+            data.Data.Add(new object[] { "031d20b1-6394-4ea5-b89b-52fe677fc731", "USDT-BTC", "LIMIT_BUY", "0.00117194", "8042.82891", "0.02356428", "9.42571291", "12/16/2017 7:12:09 AM", "12/16/2017 10:04:17 AM" });
 
             // Sell
 
-            data.Data.Add(new object[] { "a19fbf2d-73f8-4526-9856-95b715c1dd42", "USDT-BTC", "LIMIT_SELL", "5.17527292", "5980", "77.39161894", "30956.6476", "12/16/2017 20:47:27", "12/16/2017 20:47:27" });
+            data.Data.Add(new object[] { "a19fbf2d-73f8-4526-9856-95b715c1dd42", "USDT-BTC", "LIMIT_SELL", "5.17527292", "5980", "77.39161894", "30956.6476", "12/16/2017 10:47:27 AM", "12/16/2017 10:47:27 AM" });
 
             Assert.IsTrue(_exchange.IsThis(data));
 
@@ -57,7 +57,7 @@ namespace ComputeFIFOTaxes.Tests.Parsers
             Assert.AreEqual(trades[0].Price, 8042.828907623257163336006963M);
 
             Assert.IsInstanceOfType(trades[1], typeof(SellTrade));
-            Assert.AreEqual(trades[1].Date, new DateTime(2017, 12, 16, 20, 47, 27, DateTimeKind.Utc));
+            Assert.AreEqual(trades[1].Date, new DateTime(2017, 12, 16, 10, 47, 27, DateTimeKind.Utc));
             Assert.AreEqual(trades[1].Fees.Length, 1);
             Assert.AreEqual(trades[1].Fees[0].Coin, ECoin.USDT);
             Assert.AreEqual(trades[1].Fees[0].Value, 77.39161894M);

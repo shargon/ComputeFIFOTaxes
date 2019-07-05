@@ -52,7 +52,7 @@ namespace ComputeFIFOTaxes.Tests.Parsers
             // Check
 
             Assert.IsInstanceOfType(trades[0], typeof(SellTrade));
-            Assert.AreEqual(trades[0].Date, new DateTime(2019, 01, 08, 23, 14, 0, DateTimeKind.Utc));
+            Assert.AreEqual(trades[0].Date, new DateTime(2019, 01, 08, 23, 14, 0, DateTimeKind.Utc).AddTicks(1234));
             Assert.AreEqual(trades[0].Fees.Length, 1);
             Assert.AreEqual(trades[0].Fees[0].Coin, ECoin.EUR);
             Assert.AreEqual(trades[0].Fees[0].Value, 142.4183M);
@@ -63,7 +63,7 @@ namespace ComputeFIFOTaxes.Tests.Parsers
             Assert.AreEqual(trades[0].Price, 130.68999995938113550269886514M);
 
             Assert.IsInstanceOfType(trades[1], typeof(BuyTrade));
-            Assert.AreEqual(trades[1].Date, new DateTime(2019, 01, 09, 21, 35, 0, DateTimeKind.Utc));
+            Assert.AreEqual(trades[1].Date, new DateTime(2019, 01, 09, 21, 35, 0, DateTimeKind.Utc).AddTicks(1234));
             Assert.AreEqual(trades[1].Fees.Length, 1);
             Assert.AreEqual(trades[1].Fees[0].Coin, ECoin.EUR);
             Assert.AreEqual(trades[1].Fees[0].Value, 142.4183M);
