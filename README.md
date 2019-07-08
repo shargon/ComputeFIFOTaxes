@@ -2,13 +2,13 @@
 
 <p align="center">
   <a href="https://coveralls.io/github/shargon/ComputeFIFOTaxes?branch=master">
-    <img src="https://coveralls.io/repos/github/shargon/ComputeFIFOTaxes/badge.svg?branch=master" alt="Current Coverage Status" />
+    <img src="https://coveralls.io/repos/github/shargon/ComputeFIFOTaxes/badge.svg?branch=master" alt="Current Coverage Status." />
   </a>
   <a href="https://travis-ci.org/shargon/ComputeFIFOTaxes">
     <img src="https://travis-ci.org/shargon/ComputeFIFOTaxes.svg?branch=master" alt="Current TravisCI build status.">
   </a>
   <a href="https://github.com/shargon/ComputeFIFOTaxes/blob/master/LICENSE">
-    <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License">
+    <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License.">
   </a>
   <a href="https://github.com/shargon/ComputeFIFOTaxes/releases">
     <img src="https://badge.fury.io/gh/shargon%2FComputeFIFOTaxes.svg" alt="Current version.">
