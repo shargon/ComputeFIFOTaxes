@@ -1,4 +1,4 @@
-﻿using ComputeFIFOTaxes.Helpers;
+using ComputeFIFOTaxes.Helpers;
 using ComputeFIFOTaxes.Interfaces;
 using ComputeFIFOTaxes.Types;
 using Newtonsoft.Json.Linq;
@@ -52,8 +52,8 @@ namespace ComputeFIFOTaxes.Providers
                 $"http://api.coinlayer.com/{date.ToString("yyyy-MM-dd")}?access_key={ApiKey}&symbols={GetCoin(coin)}&target={GetCoin(Coin)}&expand=1"
                 );
 
-            if (!ret.TryGetValue("success", out var sucess) || 
-                !sucess.Value<bool>() || 
+            if (!ret.TryGetValue("success", out var sucess) ||
+                !sucess.Value<bool>() ||
                 !ret.TryGetValue("rates", out var rates))
             {
                 throw new ArgumentException();

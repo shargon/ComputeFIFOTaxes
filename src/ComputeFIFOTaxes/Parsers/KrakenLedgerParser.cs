@@ -1,4 +1,4 @@
-﻿using ComputeFIFOTaxes.Interfaces;
+using ComputeFIFOTaxes.Interfaces;
 using ComputeFIFOTaxes.Types;
 using Newtonsoft.Json;
 using System;

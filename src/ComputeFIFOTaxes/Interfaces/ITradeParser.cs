@@ -1,4 +1,4 @@
-﻿using ComputeFIFOTaxes.Types;
+using ComputeFIFOTaxes.Types;
 using System.Collections.Generic;
 
 namespace ComputeFIFOTaxes.Interfaces

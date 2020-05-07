@@ -1,4 +1,4 @@
-﻿using ComputeFIFOTaxes.Helpers;
+using ComputeFIFOTaxes.Helpers;
 using ComputeFIFOTaxes.Interfaces;
 using ComputeFIFOTaxes.Types;
 using System;

@@ -1,4 +1,4 @@
-﻿using ComputeFIFOTaxes.Interfaces;
+using ComputeFIFOTaxes.Interfaces;
 using ComputeFIFOTaxes.Types;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Services;

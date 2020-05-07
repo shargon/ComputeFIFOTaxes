@@ -6,6 +6,7 @@ using ComputeFIFOTaxes.Types;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
@@ -55,6 +56,7 @@ namespace ComputeFIFOTaxes
 
             // Compute fifo
 
+            var notFound = 0;
             var profits = new Dictionary<int, YearProfit>();
             trades.ComputeFifo(out var fifo,
                 (trade, fee) =>
@@ -75,7 +77,8 @@ namespace ComputeFIFOTaxes
                 {
                     if (buyPrice <= 0)
                     {
-                        //Console.WriteLine("Buy not found for: " + trade.ToString());
+                        notFound++;
+                        Console.WriteLine("Buy not found for: " + trade.ToString());
                     }
 
                     if (!profits.TryGetValue(trade.Date.Year, out var profit))
@@ -94,8 +97,12 @@ namespace ComputeFIFOTaxes
                 }
             );
 
+            File.WriteAllText("trades.json", JsonConvert.SerializeObject(trades, Formatting.Indented));
+
             Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("Buy orders not found: " + notFound);
             Console.WriteLine(JsonConvert.SerializeObject(profits, Formatting.Indented));
+            Console.WriteLine("Total: " + profits.Last().Value.Total.ToString("#,###,###,##0.00"));
             Console.ForegroundColor = ConsoleColor.Gray;
         }
     }

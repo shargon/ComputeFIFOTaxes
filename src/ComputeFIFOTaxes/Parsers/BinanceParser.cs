@@ -1,4 +1,4 @@
-﻿using ComputeFIFOTaxes.Interfaces;
+using ComputeFIFOTaxes.Interfaces;
 using ComputeFIFOTaxes.Types;
 using Newtonsoft.Json;
 using System;
@@ -129,6 +129,10 @@ namespace ComputeFIFOTaxes.Parsers
                 case "STORMETH": from = ECoin.STORM; to = ECoin.ETH; break;
 
                 case "BTTBNB": from = ECoin.BTT; to = ECoin.BNB; break;
+                case "PERLBNB": from = ECoin.PERL; to = ECoin.BNB; break;
+                case "WINBNB": from = ECoin.WIN; to = ECoin.BNB; break;
+                case "BNBBTC": from = ECoin.BNB; to = ECoin.BTC; break;
+                case "ERDUSDT": from = ECoin.ERD; to = ECoin.USDT; break;
 
                 default: throw new ArgumentException(coin);
             }
@@ -144,6 +148,8 @@ namespace ComputeFIFOTaxes.Parsers
                 case "ETH": return ECoin.ETH;
                 case "USDT": return ECoin.USDT;
                 case "BTT": return ECoin.BTT;
+                case "ERD": return ECoin.ERD;
+                case "WIN": return ECoin.WIN;
                 case "HOT": return ECoin.HOT;
                 case "OMG": return ECoin.OMG;
                 case "EOS": return ECoin.EOS;
@@ -151,6 +157,7 @@ namespace ComputeFIFOTaxes.Parsers
                 case "GAS": return ECoin.GAS;
                 case "XRP": return ECoin.XRP;
                 case "BNB": return ECoin.BNB;
+                case "PERL": return ECoin.PERL;
                 case "NCASH": return ECoin.NCASH;
                 case "STORM": return ECoin.STORM;
 

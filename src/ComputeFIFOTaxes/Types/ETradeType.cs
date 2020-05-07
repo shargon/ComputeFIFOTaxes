@@ -1,4 +1,4 @@
-﻿namespace ComputeFIFOTaxes.Types
+namespace ComputeFIFOTaxes.Types
 {
     public enum ETradeType : byte
     {

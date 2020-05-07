@@ -1,4 +1,4 @@
-﻿namespace ComputeFIFOTaxes.Types
+namespace ComputeFIFOTaxes.Types
 {
     public enum ECoin
     {
@@ -11,6 +11,7 @@
         EOS,
         XRP,
         BTT,
+        PERL,
         HOT,
         BNB,
         NEO,
@@ -49,6 +50,8 @@
         IOP,
         NEX,
         XMR,
-        KFEE
+        KFEE,
+        WIN,
+        ERD
     }
 }
