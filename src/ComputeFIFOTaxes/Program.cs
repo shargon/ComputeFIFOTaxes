@@ -22,7 +22,7 @@ namespace ComputeFIFOTaxes
             var provider = new GoogleSheetsProvider(cfg);
             var parsers = new ITradeParser[]
             {
-                new KrakenLedgerParser(), // Kraken Ledfer before Trades ALWAYS
+                new KrakenLedgerParser(), // Kraken Ledger before Trades ALWAYS
                 new KrakenTradesParser(),
                 new BittrexParser(),
                 new BinanceParser()
