@@ -44,7 +44,7 @@ namespace ComputeFIFOTaxes.Parsers
                 {
                     case "BUY":
                         {
-                            yield return new BuyTrade()
+                            var trade = new BuyTrade()
                             {
                                 Exchange = this,
                                 From = new Quantity()
@@ -67,11 +67,12 @@ namespace ComputeFIFOTaxes.Parsers
                                 },
                                 Date = DateTime.ParseExact(row[date].ToString(), "yyyy-MM-dd H:mm:ss", CultureInfo.InvariantCulture)
                             };
+                            yield return trade;
                             break;
                         }
                     case "SELL":
                         {
-                            yield return new SellTrade()
+                            var trade = new SellTrade()
                             {
                                 Exchange = this,
                                 From = new Quantity()
@@ -94,6 +95,7 @@ namespace ComputeFIFOTaxes.Parsers
                                 },
                                 Date = DateTime.ParseExact(row[date].ToString(), "yyyy-MM-dd H:mm:ss", CultureInfo.InvariantCulture)
                             };
+                            yield return trade;
                             break;
                         }
 
@@ -108,6 +110,7 @@ namespace ComputeFIFOTaxes.Parsers
             {
                 case "ETHUSDT": from = ECoin.ETH; to = ECoin.USDT; break;
                 case "BNBUSDT": from = ECoin.BNB; to = ECoin.USDT; break;
+                case "BNBBTC": from = ECoin.BNB; to = ECoin.BTC; break;
                 case "BTCUSDT": from = ECoin.BTC; to = ECoin.USDT; break;
                 case "NEOUSDT": from = ECoin.NEO; to = ECoin.USDT; break;
                 case "XRPUSDT": from = ECoin.XRP; to = ECoin.USDT; break;
