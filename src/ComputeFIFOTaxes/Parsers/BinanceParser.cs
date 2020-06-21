@@ -10,6 +10,7 @@ namespace ComputeFIFOTaxes.Parsers
 {
     public class BinanceParser : ITradeParser
     {
+        private readonly string[] WantCoulmns = "Date(UTC),Market,Type,Price,Amount,Total,Fee,Fee Coin".Split(",");
         public string Name => "Binance";
 
         public IEnumerable<Trade> GetTrades(TradeDataSource dataSource, TradeData current)
@@ -164,7 +165,7 @@ namespace ComputeFIFOTaxes.Parsers
 
             if (first == null) return false;
 
-            return string.Join(",", first.Select(u => u.ToString()).ToArray()) == "Date(UTC),Market,Type,Price,Amount,Total,Fee,Fee Coin";
+            return WantCoulmns.All(u => first.Contains(u));
         }
 
         /// <summary>

@@ -13,6 +13,7 @@ namespace ComputeFIFOTaxes.Parsers
     /// </summary>
     public class KrakenLedgerParser : ITradeParser
     {
+        private readonly string[] WantCoulmns = "txid,refid,time,type,aclass,asset,amount,fee,balance".Split(",");
         internal const string KrakenLedgerVariableName = "KrakenLedger";
         public string Name => "Kraken-Ledger";
 
@@ -106,7 +107,7 @@ namespace ComputeFIFOTaxes.Parsers
 
             if (first == null) return false;
 
-            return string.Join(",", first.Select(u => u.ToString()).ToArray()) == "txid,refid,time,type,aclass,asset,amount,fee,balance";
+            return WantCoulmns.All(u => first.Contains(u));
         }
 
         /// <summary>

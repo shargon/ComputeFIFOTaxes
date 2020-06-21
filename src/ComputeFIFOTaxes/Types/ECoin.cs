@@ -49,6 +49,9 @@
         IOP,
         NEX,
         XMR,
-        KFEE
+        KFEE,
+        AGRS,
+        MYST,
+        START
     }
 }

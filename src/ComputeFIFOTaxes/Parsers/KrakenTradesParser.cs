@@ -13,6 +13,7 @@ namespace ComputeFIFOTaxes.Parsers
     /// </summary>
     public class KrakenTradesParser : ITradeParser
     {
+        private readonly string[] WantCoulmns = "txid,ordertxid,pair,time,type,ordertype,price,cost,fee,vol,margin,misc,ledgers".Split(",");
         public string Name => "Kraken-Trades";
 
         public IEnumerable<Trade> GetTrades(TradeDataSource dataSource, TradeData current)
@@ -163,7 +164,7 @@ namespace ComputeFIFOTaxes.Parsers
 
             if (first == null) return false;
 
-            return string.Join(",", first.Select(u => u.ToString()).ToArray()) == "txid,ordertxid,pair,time,type,ordertype,price,cost,fee,vol,margin,misc,ledgers";
+            return WantCoulmns.All(u => first.Contains(u));
         }
 
         /// <summary>

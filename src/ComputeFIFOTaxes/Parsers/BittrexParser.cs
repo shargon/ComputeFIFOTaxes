@@ -13,6 +13,8 @@ namespace ComputeFIFOTaxes.Parsers
     /// </summary>
     public class BittrexParser : ITradeParser
     {
+        private readonly string[] WantCoulmns = "OrderType,Exchange,Quantity,Limit,Commission,Price,TimeStamp".Split(",");
+
         public string Name => "Bittrex";
 
         public IEnumerable<Trade> GetTrades(TradeDataSource dataSource, TradeData current)
@@ -24,10 +26,10 @@ namespace ComputeFIFOTaxes.Parsers
 
             var vol = Array.IndexOf(header, "Quantity");
             var pair = Array.IndexOf(header, "Exchange");
-            var time = Array.IndexOf(header, "Opened");
+            var time = Array.IndexOf(header, "TimeStamp");
             var cost = Array.IndexOf(header, "Price");
-            var fee = Array.IndexOf(header, "CommissionPaid");
-            var type = Array.IndexOf(header, "Type");
+            var fee = Array.IndexOf(header, "Commission");
+            var type = Array.IndexOf(header, "OrderType");
 
             if (pair < 0 || time < 0 || fee < 0 || cost < 0 || type < 0 || vol < 0) yield break;
 
@@ -138,6 +140,9 @@ namespace ComputeFIFOTaxes.Parsers
                 case "BTC-LSK": from = ECoin.BTC; to = ECoin.LSK; break;
                 case "BTC-IOP": from = ECoin.BTC; to = ECoin.IOP; break;
                 case "BTC-BNT": from = ECoin.BTC; to = ECoin.BNT; break;
+                case "BTC-AGRS": from = ECoin.BTC; to = ECoin.AGRS; break;
+                case "BTC-MYST": from = ECoin.BTC; to = ECoin.MYST; break;
+                case "BTC-START": from = ECoin.BTC; to = ECoin.START; break;
 
                 default: throw new ArgumentException(coin);
             }
@@ -151,7 +156,7 @@ namespace ComputeFIFOTaxes.Parsers
 
             if (first == null) return false;
 
-            return string.Join(",", first.Select(u => u.ToString()).ToArray()) == "Uuid,Exchange,Type,Quantity,Limit,CommissionPaid,Price,Opened,Closed";
+            return WantCoulmns.All(u => first.Contains(u));
         }
 
         /// <summary>
